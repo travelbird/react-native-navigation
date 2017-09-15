@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -41,7 +42,6 @@ class ReactScreenConfig {
     this.waitForRender = waitForRender;
     this.mode = mode;
   }
-
 }
 
 public class ReactNavigationCoordinator {
@@ -67,13 +67,13 @@ public class ReactNavigationCoordinator {
     }
     this.reactInstanceManager = reactInstanceManager;
     this.reactInstanceManager.addReactInstanceEventListener(
-      new ReactInstanceManager.ReactInstanceEventListener() {
-        @Override
-        public void onReactContextInitialized(ReactContext context) {
-          reactInstanceManager.removeReactInstanceEventListener(this);
-          isSuccessfullyInitialized = true;
-        }
-      });
+        new ReactInstanceManager.ReactInstanceEventListener() {
+          @Override
+          public void onReactContextInitialized(ReactContext context) {
+            reactInstanceManager.removeReactInstanceEventListener(this);
+            isSuccessfullyInitialized = true;
+          }
+        });
   }
 
   public void injectImplementation(NavigationImplementation implementation) {
@@ -81,6 +81,13 @@ public class ReactNavigationCoordinator {
       // TODO: throw error. can only initialize once.
     }
     this.navigationImplementation = implementation;
+  }
+
+  public void injectObjectMapper(ObjectMapper objectMapper) {
+    if (this.objectMapper != null) {
+      // TODO: throw error. can only initialize once.
+    }
+    this.objectMapper = objectMapper;
   }
 
   public NavigationImplementation getImplementation() {
@@ -102,9 +109,11 @@ public class ReactNavigationCoordinator {
    * work well enough in the interim.
    */
   private List<ReactExposedActivityParams> exposedActivities;
-  private final Map<String /* instance id */, WeakReference<ReactInterface>> componentsMap = new HashMap<>();
+  private final Map<String /* instance id */, WeakReference<ReactInterface>> componentsMap =
+      new HashMap<>();
   private final Map<String /* instance id */, Boolean> dismissCloseBehaviorMap = new HashMap<>();
   private final Map<String /* name */, ReactScreenConfig> screenMap = new HashMap<>();
+  private ObjectMapper objectMapper;
 
   ReactScreenConfig getOrDefault(String screenName) {
     ReactScreenConfig screen = screenMap.get(screenName);
@@ -128,7 +137,7 @@ public class ReactNavigationCoordinator {
    * extras. Activities should have been previously registered via {@code exposedActivities} in the
    * {@link ReactNavigationCoordinator} constructor.
    *
-   * @see ReactExposedActivityParams#toIntent(Context, ReadableMap)
+   * @see ReactExposedActivityParams#toIntent(Context, ObjectMapper, ReadableMap)
    */
   @NonNull Intent intentForKey(Context context, String key, ReadableMap arguments) {
     if (exposedActivities == null) {
@@ -137,7 +146,11 @@ public class ReactNavigationCoordinator {
 
     for (ReactExposedActivityParams exposedActivity : exposedActivities) {
       if (exposedActivity.key().equals(key)) {
-        return exposedActivity.toIntent(context, arguments);
+        if (objectMapper == null) {
+          throw new IllegalStateException("ObjectMapper not set.");
+        }
+
+        return exposedActivity.toIntent(context, objectMapper, arguments);
       }
     }
 
@@ -167,12 +180,8 @@ public class ReactNavigationCoordinator {
     return dismissClose != null && dismissClose;
   }
 
-  public void registerScreen(
-      String screenName,
-      ReadableMap initialConfig,
-      boolean waitForRender,
-      String mode
-  ) {
+  public void registerScreen(String screenName, ReadableMap initialConfig, boolean waitForRender,
+      String mode) {
     screenMap.put(screenName, new ReactScreenConfig(
         initialConfig,
         waitForRender,
@@ -180,9 +189,9 @@ public class ReactNavigationCoordinator {
     ));
   }
 
-//  public void setInitialConfigForModuleName(String screenName, ReadableMap config) {
-//    screenMap.put(screenName, config);
-//  }
+  //  public void setInitialConfigForModuleName(String screenName, ReadableMap config) {
+  //    screenMap.put(screenName, config);
+  //  }
 
   public ReadableMap getInitialConfigForModuleName(String screenName) {
     return getOrDefault(screenName).initialConfig;
@@ -208,7 +217,9 @@ public class ReactNavigationCoordinator {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         application.startActivity(intent);
-        Toast.makeText(application, "This app must have permissions to draw over other apps in order to run React Native in dev mode", Toast.LENGTH_LONG).show();
+        Toast.makeText(application,
+            "This app must have permissions to draw over other apps in order to run React Native in dev mode",
+            Toast.LENGTH_LONG).show();
       }
     }, APP_INITIALIZE_TOAST_DELAY);
   }
@@ -217,6 +228,7 @@ public class ReactNavigationCoordinator {
     if (screenCoordinator == null) {
       throw new IllegalStateException("screenCoordinator == null");
     }
-    return screenCoordinator.pushNativeScreen(name, ConversionUtil.toBundle(props), ConversionUtil.toBundle(options));
+    return screenCoordinator.pushNativeScreen(name, ConversionUtil.toBundle(props),
+        ConversionUtil.toBundle(options));
   }
 }

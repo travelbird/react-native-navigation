@@ -12,21 +12,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.airbnb.android.react.navigation.ReactExposedActivityParamsConstants.KEY_ARGUMENT;
 
 public class ReactExposedActivityParams {
-  private final ObjectMapper objectMapper;
   private final String key;
   private final Class<? extends Activity> klass;
   private final Class<? extends Parcelable> argumentType;
   private static final Class<Bundle> DEFAULT_CLASS = Bundle.class;
 
-  public ReactExposedActivityParams(ObjectMapper objectMapper, String key,
-      Class<? extends Activity> klass) {
-    this(objectMapper, key, klass, DEFAULT_CLASS);
+  public ReactExposedActivityParams(String key, Class<? extends Activity> klass) {
+    this(key, klass, DEFAULT_CLASS);
   }
 
-  public ReactExposedActivityParams(ObjectMapper objectMapper, String key,
-      Class<? extends Activity> klass,
+  public ReactExposedActivityParams(String key, Class<? extends Activity> klass,
       Class<? extends Parcelable> argumentType) {
-    this.objectMapper = objectMapper;
     this.key = key;
     this.klass = klass;
     this.argumentType = argumentType;
@@ -41,7 +37,7 @@ public class ReactExposedActivityParams {
    * type {@code argumentType} instead, by using Jackson to deserialize the contents of {@code
    * arguments}.
    */
-  Intent toIntent(Context context, ReadableMap arguments) {
+  Intent toIntent(Context context, ObjectMapper objectMapper, ReadableMap arguments) {
     Intent intent = new Intent(context, klass);
     if (argumentType.equals(DEFAULT_CLASS)) {
       intent.putExtras(ConversionUtil.toBundle(arguments));
