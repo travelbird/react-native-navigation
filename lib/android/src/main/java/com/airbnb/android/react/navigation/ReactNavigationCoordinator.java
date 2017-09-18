@@ -11,16 +11,14 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import rodo.Rodo;
 
 class ReactScreenConfig {
   ReadableMap initialConfig;
@@ -83,11 +81,11 @@ public class ReactNavigationCoordinator {
     this.navigationImplementation = implementation;
   }
 
-  public void injectObjectMapper(ObjectMapper objectMapper) {
-    if (this.objectMapper != null) {
+  public void injectRodo(Rodo rodo) {
+    if (this.rodo != null) {
       // TODO: throw error. can only initialize once.
     }
-    this.objectMapper = objectMapper;
+    this.rodo = rodo;
   }
 
   public NavigationImplementation getImplementation() {
@@ -113,7 +111,7 @@ public class ReactNavigationCoordinator {
       new HashMap<>();
   private final Map<String /* instance id */, Boolean> dismissCloseBehaviorMap = new HashMap<>();
   private final Map<String /* name */, ReactScreenConfig> screenMap = new HashMap<>();
-  private ObjectMapper objectMapper;
+  private Rodo rodo;
 
   ReactScreenConfig getOrDefault(String screenName) {
     ReactScreenConfig screen = screenMap.get(screenName);
@@ -137,7 +135,7 @@ public class ReactNavigationCoordinator {
    * extras. Activities should have been previously registered via {@code exposedActivities} in the
    * {@link ReactNavigationCoordinator} constructor.
    *
-   * @see ReactExposedActivityParams#toIntent(Context, ObjectMapper, ReadableMap)
+   * @see ReactExposedActivityParams#toIntent(Context, Rodo, ReadableMap)
    */
   @NonNull Intent intentForKey(Context context, String key, ReadableMap arguments) {
     if (exposedActivities == null) {
@@ -146,11 +144,11 @@ public class ReactNavigationCoordinator {
 
     for (ReactExposedActivityParams exposedActivity : exposedActivities) {
       if (exposedActivity.key().equals(key)) {
-        if (objectMapper == null) {
-          throw new IllegalStateException("ObjectMapper not set.");
+        if (rodo == null) {
+          throw new IllegalStateException("Rodo not set.");
         }
 
-        return exposedActivity.toIntent(context, objectMapper, arguments);
+        return exposedActivity.toIntent(context, rodo, arguments);
       }
     }
 

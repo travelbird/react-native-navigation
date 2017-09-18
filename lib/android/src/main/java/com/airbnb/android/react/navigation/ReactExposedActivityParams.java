@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-
 import com.facebook.react.bridge.ReadableMap;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import rodo.Rodo;
 
 import static com.airbnb.android.react.navigation.ReactExposedActivityParamsConstants.KEY_ARGUMENT;
 
@@ -37,12 +36,12 @@ public class ReactExposedActivityParams {
    * type {@code argumentType} instead, by using Jackson to deserialize the contents of {@code
    * arguments}.
    */
-  Intent toIntent(Context context, ObjectMapper objectMapper, ReadableMap arguments) {
+  Intent toIntent(Context context, Rodo rodo, ReadableMap arguments) {
     Intent intent = new Intent(context, klass);
     if (argumentType.equals(DEFAULT_CLASS)) {
       intent.putExtras(ConversionUtil.toBundle(arguments));
     } else {
-      intent.putExtra(KEY_ARGUMENT, ConversionUtil.toType(objectMapper, arguments, argumentType));
+      intent.putExtra(KEY_ARGUMENT, rodo.convert(argumentType, arguments));
     }
     return intent;
   }

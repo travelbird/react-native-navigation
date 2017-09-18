@@ -2,22 +2,20 @@ package com.airbnb.android.react.navigation;
 
 import android.os.Bundle;
 import android.util.Log;
-
-import com.facebook.react.bridge.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.IOException;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableType;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
-final class ConversionUtil {
+@SuppressWarnings("unused") final class ConversionUtil {
   private static final String TAG = ConversionUtil.class.getSimpleName();
 
   private ConversionUtil() {
@@ -56,85 +54,6 @@ final class ConversionUtil {
           break;
         default:
           Log.e(TAG, "Could not convert object with key: " + key + ".");
-      }
-    }
-    return result;
-  }
-
-  /** Converts the provided {@code readableMap} into an object of the provided {@code targetType} */
-  static <T> T toType(ObjectMapper objectMapper, ReadableMap readableMap, Class<T>
-      targetType) {
-    ObjectNode jsonNode = toJsonObject(readableMap);
-    ObjectReader objectReader = JacksonUtils.readerForType(objectMapper, targetType);
-    //noinspection OverlyBroadCatchBlock
-    try {
-      return objectReader.readValue(jsonNode);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  /** Converts a {@link ReadableMap} into an Json {@link ObjectNode} */
-  static ObjectNode toJsonObject(ReadableMap readableMap) {
-    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-    ObjectNode result = nodeFactory.objectNode();
-    ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
-    while (iterator.hasNextKey()) {
-      String key = iterator.nextKey();
-      ReadableType type = readableMap.getType(key);
-      switch (type) {
-        case Null:
-          result.putNull(key);
-          break;
-        case Boolean:
-          result.put(key, readableMap.getBoolean(key));
-          break;
-        case Number:
-          result.put(key, readableMap.getDouble(key));
-          break;
-        case String:
-          result.put(key, readableMap.getString(key));
-          break;
-        case Map:
-          result.set(key, toJsonObject(readableMap.getMap(key)));
-          break;
-        case Array:
-          result.set(key, toJsonArray(readableMap.getArray(key)));
-          break;
-        default:
-          Log.e(TAG, "Could not convert object with key: " + key + ".");
-      }
-    }
-    return result;
-  }
-
-  /** Converts a {@link ReadableArray} into an Json {@link ArrayNode} */
-  static ArrayNode toJsonArray(ReadableArray readableArray) {
-    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-    ArrayNode result = nodeFactory.arrayNode();
-    for (int i = 0; i < readableArray.size(); i++) {
-      ReadableType indexType = readableArray.getType(i);
-      switch (indexType) {
-        case Null:
-          result.addNull();
-          break;
-        case Boolean:
-          result.add(readableArray.getBoolean(i));
-          break;
-        case Number:
-          result.add(readableArray.getDouble(i));
-          break;
-        case String:
-          result.add(readableArray.getString(i));
-          break;
-        case Map:
-          result.add(toJsonObject(readableArray.getMap(i)));
-          break;
-        case Array:
-          result.add(toJsonArray(readableArray.getArray(i)));
-          break;
-        default:
-          Log.e(TAG, "Could not convert object at index " + i + ".");
       }
     }
     return result;
@@ -188,7 +107,7 @@ final class ConversionUtil {
     return result;
   }
 
-  static void merge(WritableMap target, ReadableMap map) {
+  private static void merge(WritableMap target, ReadableMap map) {
     ReadableMapKeySetIterator iterator = map.keySetIterator();
     while (iterator.hasNextKey()) {
       String key = iterator.nextKey();
@@ -222,13 +141,13 @@ final class ConversionUtil {
     }
   }
 
-  static WritableMap cloneMap(ReadableMap map) {
+  private static WritableMap cloneMap(ReadableMap map) {
     WritableNativeMap target = new WritableNativeMap();
     merge(target, map);
     return target;
   }
 
-  static WritableArray cloneArray(ReadableArray source) {
+  private static WritableArray cloneArray(ReadableArray source) {
     WritableNativeArray result = new WritableNativeArray();
     for (int i = 0; i < source.size(); i++) {
       ReadableType indexType = source.getType(i);
@@ -323,7 +242,7 @@ final class ConversionUtil {
     return result;
   }
 
-  static List<Object> toArray(ReadableArray readableArray) {
+  private static List<Object> toArray(ReadableArray readableArray) {
     List<Object> result = new ArrayList<>(readableArray.size());
     for (int i = 0; i < readableArray.size(); i++) {
       ReadableType indexType = readableArray.getType(i);
