@@ -97,15 +97,18 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  compileSdkVersion versions.androidCompileSdk
+  buildToolsVersion versions.androidBuildTools
 
   defaultConfig {
     applicationId "com.airbnb.android.react.navigation.example"
-    minSdkVersion 18
-    targetSdkVersion 25
+
+    minSdkVersion versions.androidMinSdk
+    targetSdkVersion versions.androidTargetSdk
+
     versionCode 1
     versionName "1.0"
+
     ndk {
       abiFilters "armeabi-v7a", "x86"
     }
@@ -153,7 +156,7 @@ android {
 }
 
 dependencies {
-  compile 'com.facebook.react:react-native:0.42.+'
+  compile libraries.reactNative
   compile 'com.android.support:appcompat-v7:25.1.1'
   compile 'com.android.support:support-annotations:25.1.1'
   compile project(':native-navigation-lib')

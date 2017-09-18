@@ -2,12 +2,11 @@ apply plugin: 'com.android.library'
 apply from: 'gradle-maven-push.gradle'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  compileSdkVersion versions.androidCompileSdk
+  buildToolsVersion versions.androidBuildTools
 
   defaultConfig {
-    minSdkVersion 18
-    targetSdkVersion 25
+    minSdkVersion versions.androidMinSdk
   }
 
   packagingOptions {
@@ -34,11 +33,12 @@ android {
 }
 
 dependencies {
+  provided libraries.reactNative
+
   compile 'com.android.support:appcompat-v7:25.2.0'
   compile 'com.android.support:support-annotations:25.2.0'
   compile 'com.android.support:design:25.2.0'
   compile 'com.travelbird.rodo:rodo-core:0.1.0'
   compile 'com.facebook.fresco:fresco:1.0.1'
   compile 'com.facebook.fresco:imagepipeline-okhttp3:1.0.1'
-  provided 'com.facebook.react:react-native:+'
 }
