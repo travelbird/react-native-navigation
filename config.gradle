@@ -1,0 +1,23 @@
+ext {
+  versions = [
+      'androidCompileSdk': 25,
+      'androidMinSdk'    : 18,
+      'androidTargetSdk' : 25,
+      'androidBuildTools': '26.0.1',
+      'androidGradle'    : '3.0.0-beta6',
+
+      'junit'            : '4.12',
+      'assertJ'          : '2.6.0',
+  ]
+
+  libraries = [
+      'reactNative': 'com.facebook.react:react-native:0.42.3',
+
+      'junit'      : "junit:junit:${versions.junit}",
+      'assertJ'    : "org.assertj:assertj-core:${versions.assertJ}",
+  ]
+
+  usedPlugins = [
+      'androidGradle': "com.android.tools.build:gradle:${versions.androidGradle}",
+  ]
+}
