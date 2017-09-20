@@ -35,10 +35,12 @@ android {
 dependencies {
   provided libraries.reactNative
 
-  compile 'com.android.support:appcompat-v7:25.2.0'
-  compile 'com.android.support:support-annotations:25.2.0'
-  compile 'com.android.support:design:25.2.0'
-  compile 'com.travelbird.rodo:rodo-core:0.1.0'
-  compile 'com.facebook.fresco:fresco:1.0.1'
-  compile 'com.facebook.fresco:imagepipeline-okhttp3:1.0.1'
+  compile libraries.android.appcompat
+  compile libraries.android.annotations
+  compile libraries.android.design
+
+  compile libraries.rodo.core
+
+  compile libraries.fresco.core
+  compile libraries.fresco.okhttp3
 }
