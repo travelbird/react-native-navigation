@@ -37,8 +37,8 @@ public final class ReactNativeIntents {
     Intent intent = pushIntent(activity, moduleName, props);
     //noinspection unchecked
     Bundle options = ActivityOptionsCompat
-            .makeSceneTransitionAnimation(activity)
-            .toBundle();
+        .makeSceneTransitionAnimation(activity)
+        .toBundle();
     activity.startActivity(intent, options);
   }
 
@@ -47,27 +47,26 @@ public final class ReactNativeIntents {
     presentScreen(context, moduleName, null);
   }
 
-
   @SuppressWarnings("WeakerAccess")
   public static void presentScreen(Activity activity, String moduleName, @Nullable Bundle props) {
     Intent intent = presentIntent(activity, moduleName, props);
     //noinspection unchecked
     Bundle options = ActivityOptionsCompat
-            .makeSceneTransitionAnimation(activity)
-            .toBundle();
+        .makeSceneTransitionAnimation(activity)
+        .toBundle();
     activity.startActivity(intent, options);
   }
 
   static Bundle getSharedElementOptionsBundle(
-          Activity activity, Intent intent, @Nullable ReadableMap options) {
+      Activity activity, Intent intent, @Nullable ReadableMap options) {
     ViewGroup transitionGroup = null;
     if (activity instanceof ReactInterface && options != null &&
-            options.hasKey(SHARED_ELEMENT_TRANSITION_GROUP_OPTION)) {
+        options.hasKey(SHARED_ELEMENT_TRANSITION_GROUP_OPTION)) {
       ReactRootView reactRootView = ((ReactInterface) activity).getReactRootView();
       transitionGroup = ViewUtils.findViewGroupWithTag(
-              reactRootView,
-              R.id.react_shared_element_group_id,
-              options.getString(SHARED_ELEMENT_TRANSITION_GROUP_OPTION));
+          reactRootView,
+          R.id.react_shared_element_group_id,
+          options.getString(SHARED_ELEMENT_TRANSITION_GROUP_OPTION));
     }
 
     if (transitionGroup == null) {
@@ -81,23 +80,23 @@ public final class ReactNativeIntents {
     }
   }
 
-  static Intent pushIntent(Context context, String moduleName, @Nullable Bundle props) {
-    Class destClass = coordinator.getOrDefault(moduleName).mode.getPushActivityClass();
+  private static Intent pushIntent(Context context, String moduleName, @Nullable Bundle props) {
+    Class destClass = coordinator.getScreenModeForModuleName(moduleName).getPushActivityClass();
     return new Intent(context, destClass)
-            .putExtras(intentExtras(moduleName, props));
+        .putExtras(intentExtras(moduleName, props));
   }
 
-  static Intent presentIntent(
-          Context context, String moduleName, @Nullable Bundle props) {
-    Class destClass = coordinator.getOrDefault(moduleName).mode.getPresentActivityClass();
+  private static Intent presentIntent(
+      Context context, String moduleName, @Nullable Bundle props) {
+    Class destClass = coordinator.getScreenModeForModuleName(moduleName).getPresentActivityClass();
     return new Intent(context, destClass)
-            .putExtras(intentExtras(moduleName, props));
+        .putExtras(intentExtras(moduleName, props));
   }
 
   private static Bundle intentExtras(String moduleName, @Nullable Bundle props) {
     return new BundleBuilder()
-            .putString(EXTRA_MODULE_NAME, moduleName)
-            .putBundle(EXTRA_PROPS, props)
-            .toBundle();
+        .putString(EXTRA_MODULE_NAME, moduleName)
+        .putBundle(EXTRA_PROPS, props)
+        .toBundle();
   }
 }

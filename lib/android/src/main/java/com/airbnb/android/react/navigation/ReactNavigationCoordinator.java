@@ -20,28 +20,6 @@ import java.util.List;
 import java.util.Map;
 import rodo.Rodo;
 
-class ReactScreenConfig {
-  ReadableMap initialConfig;
-  boolean waitForRender;
-  ReactScreenMode mode;
-
-  static final ReactScreenConfig EMPTY = new ReactScreenConfig(
-      ConversionUtil.EMPTY_MAP,
-      true,
-      ReactScreenMode.SCREEN
-  );
-
-  ReactScreenConfig(
-      ReadableMap initialConfig,
-      boolean waitForRender,
-      ReactScreenMode mode
-  ) {
-    this.initialConfig = initialConfig;
-    this.waitForRender = waitForRender;
-    this.mode = mode;
-  }
-}
-
 public class ReactNavigationCoordinator {
   public static ReactNavigationCoordinator sharedInstance = new ReactNavigationCoordinator();
 
@@ -113,14 +91,6 @@ public class ReactNavigationCoordinator {
   private final Map<String /* name */, ReactScreenConfig> screenMap = new HashMap<>();
   private Rodo rodo;
 
-  ReactScreenConfig getOrDefault(String screenName) {
-    ReactScreenConfig screen = screenMap.get(screenName);
-    if (screen == null) {
-      screen = ReactScreenConfig.EMPTY;
-    }
-    return screen;
-  }
-
   public void registerComponent(ReactInterface component, String name) {
     componentsMap.put(name, new WeakReference<>(component));
   }
@@ -187,14 +157,6 @@ public class ReactNavigationCoordinator {
     ));
   }
 
-  //  public void setInitialConfigForModuleName(String screenName, ReadableMap config) {
-  //    screenMap.put(screenName, config);
-  //  }
-
-  public ReadableMap getInitialConfigForModuleName(String screenName) {
-    return getOrDefault(screenName).initialConfig;
-  }
-
   public void start(final Application application) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(application)) {
       handleOverlayPermissionsMissing(application);
@@ -212,12 +174,14 @@ public class ReactNavigationCoordinator {
       public void run() {
         // Delaying an arbitrary 3 seconds so that the app can bootstrap, or else this intent doesn't
         // seem to really work.
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        application.startActivity(intent);
-        Toast.makeText(application,
-            "This app must have permissions to draw over other apps in order to run React Native in dev mode",
-            Toast.LENGTH_LONG).show();
+        if (AndroidVersion.isAtLeastMarshmallow()) {
+          Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+              .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          application.startActivity(intent);
+          Toast.makeText(application,
+              "This app must have permissions to draw over other apps in order to run React Native in dev mode",
+              Toast.LENGTH_LONG).show();
+        }
       }
     }, APP_INITIALIZE_TOAST_DELAY);
   }
@@ -228,5 +192,36 @@ public class ReactNavigationCoordinator {
     }
     return screenCoordinator.pushNativeScreen(name, ConversionUtil.toBundle(props),
         ConversionUtil.toBundle(options));
+  }
+
+  @NonNull private ReactScreenConfig getOrDefault(String screenName) {
+    ReactScreenConfig screen = screenMap.get(screenName);
+    if (screen == null) {
+      screen = ReactScreenConfig.EMPTY;
+    }
+    return screen;
+  }
+
+  ReadableMap getInitialConfigForModuleName(String screenName) {
+    return getOrDefault(screenName).initialConfig;
+  }
+
+  ReactScreenMode getScreenModeForModuleName(String screenName) {
+    return getOrDefault(screenName).mode;
+  }
+
+  private static final class ReactScreenConfig {
+    final ReadableMap initialConfig;
+    final boolean waitForRender;
+    final ReactScreenMode mode;
+
+    static final ReactScreenConfig EMPTY =
+        new ReactScreenConfig(ConversionUtil.EMPTY_MAP, true, ReactScreenMode.SCREEN);
+
+    ReactScreenConfig(ReadableMap initialConfig, boolean waitForRender, ReactScreenMode mode) {
+      this.initialConfig = initialConfig;
+      this.waitForRender = waitForRender;
+      this.mode = mode;
+    }
   }
 }
