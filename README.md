@@ -1,10 +1,4 @@
-# Native Navigation
-
-[![Join the chat at https://gitter.im/airbnb/native-navigation](https://badges.gitter.im/airbnb/native-navigation.svg)](https://gitter.im/airbnb/native-navigation?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![npm Version](https://img.shields.io/npm/v/native-navigation.svg)](https://www.npmjs.com/package/native-navigation) 
-[![License](https://img.shields.io/npm/l/native-navigation.svg)](https://www.npmjs.com/package/native-navigation) 
-[![Build Status](https://travis-ci.org/airbnb/native-navigation.svg)](https://travis-ci.org/airbnb/native-navigation) 
+# React Native Navigation
 
 ## DISCLAIMER
 
@@ -13,6 +7,10 @@
 Many of the core APIs are subject to change, and we do not consider this project "Production Ready" until it hits a 1.0 release. We encourage people to try this library out and provide us feedback as we get it to a stable state we are confident in, but not to rely on it for production use until then.
 
 Read more about our [Roadmap to 1.0](/docs/roadmap.md)
+
+**This project is a fork of the original Airbnb library**
+
+This project is a hard fork of the [Airbnb Navigation Library](https://github.com/airbnb/native-navigation) that adds (and/or removes) some apis that we deemed necessary for our internal use. 
 
 ## Contents
 
@@ -85,7 +83,8 @@ To run on Android: `npm run run:android`
 
 Native Navigation is a navigation library for the React Native platform. There are many navigation libraries in the React Native ecosystem. Native Navigation is unique in that it is built on top of the iOS and Android platform navigational components, and is thus more "native" than most other options which implement navigation from scratch in JavaScript on top of base React Native components like `View` and `Animated`.
 
-[React Native Navigation](https://github.com/wix/react-native-navigation) by Wix engineering is an alternative library that uses "Native" navigation components of each platform, and has been around longer than Native Navigation. If you need a stable / production-ready navigation library *today* that uses native platform based navigation components, we recommend you check this library out.
+[React Native Navigation by Wix](https://github.com/wix/react-native-navigation) is an alternative library that uses "Native" navigation components of each platform, and has been around longer than Native Navigation. If you need a stable / production-ready navigation library *today* that uses native platform based navigation components, we recommend you check this library out.
+[React Native Navigation by Airbnb](https://github.com/airbnb/native-navigation) is the original library on which this one is based.
 
 If you are investigating navigation solutions and you are okay with JavaScript-based solutions, we also encourage you to check out [React Navigation](https://reactnavigation.org/).
 
@@ -99,4 +98,4 @@ See the [Frequently Asked Questions](/docs/FAQ.md) page
 
 ## License
 
-This project is licensed under the [MIT License](/LICENSE.md).
+This project is licensed under the [MIT License](/LICENSE).
