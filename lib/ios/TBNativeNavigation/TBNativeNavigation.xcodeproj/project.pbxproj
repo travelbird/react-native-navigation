@@ -47,7 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4D87C8CC1F7516E600642240 /* libTBNativeNavigation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTBNativeNavigation.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D87C8CC1F7516E600642240 /* lib/TBNativeNavigation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib/TBNativeNavigation.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D87C8CF1F7516E600642240 /* TBNativeNavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBNativeNavigation.h; sourceTree = "<group>"; };
 		4D87C8D81F75172500642240 /* TBNativeNavigation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBNativeNavigation-Bridging-Header.h"; sourceTree = "<group>"; };
 		4D87C8D91F75172600642240 /* TabBarViewManagerBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarViewManagerBridge.m; sourceTree = "<group>"; };
@@ -98,7 +98,7 @@
 		4D87C8CD1F7516E600642240 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4D87C8CC1F7516E600642240 /* libTBNativeNavigation.a */,
+				4D87C8CC1F7516E600642240 /* lib/TBNativeNavigation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,7 +153,7 @@
 			);
 			name = TBNativeNavigation;
 			productName = TBNativeNavigation;
-			productReference = 4D87C8CC1F7516E600642240 /* libTBNativeNavigation.a */;
+			productReference = 4D87C8CC1F7516E600642240 /* lib/TBNativeNavigation.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
