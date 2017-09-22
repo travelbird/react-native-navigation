@@ -17,16 +17,11 @@ public enum ReactScreenMode {
   private Class pushActivityClass;
   private Class presentActivityClass;
 
-  ReactScreenMode(
-      Class pushActivityClass
-  ) {
+  ReactScreenMode(Class pushActivityClass) {
     this(pushActivityClass, pushActivityClass);
   }
 
-  ReactScreenMode(
-      Class pushActivityClass,
-      Class presentActivityClass
-  ) {
+  ReactScreenMode(Class pushActivityClass, Class presentActivityClass) {
     this.pushActivityClass = pushActivityClass;
     this.presentActivityClass = presentActivityClass;
   }
@@ -34,6 +29,7 @@ public enum ReactScreenMode {
   public Class getPushActivityClass() {
     return this.pushActivityClass;
   }
+
   public Class getPresentActivityClass() {
     return this.presentActivityClass;
   }
