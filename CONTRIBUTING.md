@@ -10,10 +10,10 @@ After forking to your own github org, do the following steps to get started:
 
 ```bash
 # clone your fork to your local machine
-git clone https://github.com/airbnb/native-navigation.git
+git clone https://github.com/travelbird/react-native-navigation.git
 
 # step into local repo
-cd native-navigation
+cd react-native-navigation
 
 # install dependencies
 npm install
