@@ -9,8 +9,6 @@ def versions = [
 
     'rodo'             : '0.1.0',
 
-    'fresco'           : '1.0.1',
-
     'junit'            : '4.12',
     'assertJ'          : '2.6.0',
 ]
@@ -27,11 +25,6 @@ def libraries = [
     'rodo'       : [
         'core' : "com.travelbird.rodo:rodo-core:${versions.rodo}",
         'moshi': "com.travelbird.rodo:rodo-moshi:${versions.rodo}",
-    ],
-
-    'fresco'     : [
-        'core'   : "com.facebook.fresco:fresco:${versions.fresco}",
-        'okhttp3': "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}",
     ],
 
     'junit'      : "junit:junit:${versions.junit}",
@@ -77,7 +70,4 @@ dependencies {
   compile libraries.android.design
 
   compile libraries.rodo.core
-
-  compile libraries.fresco.core
-  compile libraries.fresco.okhttp3
 }
