@@ -4,7 +4,7 @@ def versions = [
     'androidCompileSdk': 25,
     'androidMinSdk'    : 18,
     'androidTargetSdk' : 25,
-    'androidBuildTools': '26.0.1',
+    'androidBuildTools': '26.0.2',
     'androidSupport'   : '25.2.0',
 
     'rodo'             : '0.1.0',
