@@ -427,14 +427,18 @@ extension ReactViewController : ReactAnimationFromContentVendor {
     )
   }
 
-  public func reactAnimationFromContent(_ animationContainer: UIView, transitionGroup: String, options: [String: Any]) -> ReactAnimationFromContent {
-    let snapshot = self.snapshotForAnimationContainer(animationContainer, transitionGroup: transitionGroup)
-    animationContainer.sendSubview(toBack: snapshot.screenWithoutElements.view)
-    return ReactAnimationFromContent(
-      screenWithoutElements: snapshot.screenWithoutElements.view,
-      sharedElements: snapshot.sharedElements.mapValues { $0.view }
-    )
-  }
+    public func reactAnimationFromContent(_ animationContainer: UIView, transitionGroup: String, options: [String: Any]) -> ReactAnimationFromContent {
+        let snapshot = self.snapshotForAnimationContainer(animationContainer, transitionGroup: transitionGroup)
+        animationContainer.sendSubview(toBack: snapshot.screenWithoutElements.view)
+        var sharedElements = [String: UIView]()
+        for (key, value) in snapshot.sharedElements {
+            sharedElements[key] = value.view
+        }
+        return ReactAnimationFromContent(
+            screenWithoutElements: snapshot.screenWithoutElements.view,
+            sharedElements: sharedElements
+        )
+    }
 
   public func containerView() -> UIView {
     return view
@@ -444,13 +448,17 @@ extension ReactViewController : ReactAnimationFromContentVendor {
 // MARK: ReactAnimationToContentVendor
 
 extension ReactViewController : ReactAnimationToContentVendor {
-  public func reactAnimationToContent(_ animationContainer: UIView) -> ReactAnimationToContent {
-    let snapshot = self.snapshotForAnimationContainer(animationContainer)
-    animationContainer.sendSubview(toBack: snapshot.screenWithoutElements.view)
-    return ReactAnimationToContent(
-      screenWithoutElements: snapshot.screenWithoutElements.view,
-      sharedElements: snapshot.sharedElements.mapValues { $0.view }
-    )
-  }
+    public func reactAnimationToContent(_ animationContainer: UIView) -> ReactAnimationToContent {
+        let snapshot = self.snapshotForAnimationContainer(animationContainer)
+        animationContainer.sendSubview(toBack: snapshot.screenWithoutElements.view)
+        var sharedElements = [String: UIView]()
+        for (key, value) in snapshot.sharedElements {
+            sharedElements[key] = value.view
+        }
+        return ReactAnimationToContent(
+            screenWithoutElements: snapshot.screenWithoutElements.view,
+            sharedElements: sharedElements
+        )
+    }
 }
 
