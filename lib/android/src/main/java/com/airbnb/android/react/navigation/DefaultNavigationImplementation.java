@@ -5,28 +5,20 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenu;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.*;
-import com.airbnb.android.R;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowManager;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
-
-import java.util.Objects;
 
 public class DefaultNavigationImplementation implements NavigationImplementation {
   private static final String TAG = "DefaultImplementation";
@@ -81,40 +73,15 @@ public class DefaultNavigationImplementation implements NavigationImplementation
   }
 
   private static int TextAlignmentFromString(String s) {
-    switch(s) {
+    switch (s) {
       case "center":
-          return View.TEXT_ALIGNMENT_CENTER;
+        return View.TEXT_ALIGNMENT_CENTER;
       case "right":
         return View.TEXT_ALIGNMENT_VIEW_END;
       case "left":
       default:
         return View.TEXT_ALIGNMENT_VIEW_START;
     }
-  }
-
-  public float getBarHeight(
-      ReactInterface component,
-      ReactToolbar toolbar,
-      ActionBar actionBar,
-      ReadableMap config,
-      boolean firstCall
-  ) {
-
-    Activity activity = component.getActivity();
-    TypedValue typedValue = new TypedValue();
-
-    int attributeResourceId = android.R.attr.actionBarSize;
-    if (activity instanceof AppCompatActivity) {
-      attributeResourceId = R.attr.actionBarSize;
-    }
-
-    if (activity.getTheme().resolveAttribute(attributeResourceId, typedValue, true)) {
-      float px = TypedValue.complexToDimension(typedValue.data, activity.getResources().getDisplayMetrics());
-      float pixelDensity = Resources.getSystem().getDisplayMetrics().density;
-      return px / pixelDensity;
-    }
-    // if we've made it here, we need to guess...
-    return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
   }
 
   @TargetApi(Build.VERSION_CODES.M)
@@ -202,28 +169,14 @@ public class DefaultNavigationImplementation implements NavigationImplementation
     }
   }
 
-  private void reconcileStatusBarStyle(
-      Activity activity,
-      ReadableMap prev,
-      ReadableMap next,
-      boolean firstCall
-  ) {
+  private void reconcileStatusBarStyle(Activity activity, ReadableMap prev, ReadableMap next,
+      boolean firstCall) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      reconcileStatusBarStyleOnM(
-          activity,
-          prev,
-          next,
-          firstCall
-      );
+      reconcileStatusBarStyleOnM(activity, prev, next, firstCall);
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      reconcileStatusBarStyleOnLollipop(
-          activity,
-          prev,
-          next,
-          firstCall
-      );
+      reconcileStatusBarStyleOnLollipop(activity, prev, next, firstCall);
     }
 
     if (firstCall || boolHasChanged("statusBarHidden", prev, next)) {
@@ -246,8 +199,6 @@ public class DefaultNavigationImplementation implements NavigationImplementation
   // than the system default, so those properties start off out of sync...
   public void reconcileNavigationProperties(
       ReactInterface component,
-      ReactToolbar toolbar,
-      ActionBar bar,
       ReadableMap prev,
       ReadableMap next,
       boolean firstCall
@@ -260,51 +211,6 @@ public class DefaultNavigationImplementation implements NavigationImplementation
       foregroundColor = next.getInt("foregroundColor");
     }
 
-    if (stringHasChanged("title", prev, next)) {
-      if (next.hasKey("title")) {
-        String title = next.getString("title");
-        toolbar.setTitle(title);
-      } else {
-        toolbar.setTitle(null);
-      }
-    }
-
-    if (firstCall || numberHasChanged("titleColor", prev, next)) {
-      if (next.hasKey("titleColor")) {
-        Integer titleColor = next.getInt("titleColor");
-        toolbar.setTitleTextColor(titleColor);
-      } else {
-        toolbar.setTitleTextColor(foregroundColor);
-      }
-    }
-
-    if (stringHasChanged("subtitle", prev, next)) {
-      if (next.hasKey("subtitle")) {
-        String subtitle = next.getString("subtitle");
-        toolbar.setSubtitle(subtitle);
-      } else {
-        toolbar.setSubtitle(null);
-      }
-    }
-
-    if (firstCall || numberHasChanged("subtitleColor", prev, next)) {
-      if (next.hasKey("subtitleColor")) {
-        Integer subtitleColor = next.getInt("subtitleColor");
-        toolbar.setSubtitleTextColor(subtitleColor);
-      } else {
-        toolbar.setSubtitleTextColor(foregroundColor);
-      }
-    }
-
-    if (stringHasChanged("windowTitle", prev, next)) {
-      if (next.hasKey("windowTitle")) {
-        String windowTitle = next.getString("windowTitle");
-        bar.setWindowTitle(windowTitle);
-      } else {
-        bar.setWindowTitle(null);
-      }
-    }
-
     if (firstCall || numberHasChanged("screenColor", prev, next)) {
       if (next.hasKey("screenColor")) {
         // this is the screen background color
@@ -315,253 +221,12 @@ public class DefaultNavigationImplementation implements NavigationImplementation
       }
     }
 
-    if (firstCall || numberHasChanged("backgroundColor", prev, next)) {
-      if (next.hasKey("backgroundColor")) {
-        Integer backgroundColor = next.getInt("backgroundColor");
-        toolbar.setBackgroundColor(backgroundColor);
-      } else {
-        toolbar.setBackgroundColor(defaults.backgroundColor);
-      }
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      if (firstCall || numberHasChanged("elevation", prev, next)) {
-        if (next.hasKey("elevation")) {
-          Double elevation = next.getDouble("elevation");
-            toolbar.setElevation(elevation.floatValue());
-        } else {
-          toolbar.setElevation(defaults.elevation);
-        }
-      }
-    }
-
-    if (firstCall || numberHasChanged("alpha", prev, next)) {
-      if (next.hasKey("alpha")) {
-        Double alpha = next.getDouble("alpha");
-        toolbar.setAlpha(alpha.floatValue());
-      } else {
-        toolbar.setAlpha(defaults.alpha);
-      }
-    }
-
-    if (firstCall || mapHasChanged("navIcon", prev, next)) {
-      if (next.hasKey("navIcon")) {
-        toolbar.setNavIconSource(next.getMap("navIcon"));
-      } else {
-//        toolbar.setNavigationIcon(android.R.drawable.ic_launchaer/*R.drawable.abc_ic_ab_back_mtrl_am_alpha*/);
-      }
-    }
-
-    if (firstCall || mapHasChanged("logo", prev, next)) {
-      if (next.hasKey("logo")) {
-        toolbar.setLogoSource(next.getMap("logo"));
-      } else {
-
-      }
-    }
-
-    if (firstCall || mapHasChanged("overflowIcon", prev, next)) {
-      if (next.hasKey("overflowIcon")) {
-        toolbar.setOverflowIconSource(next.getMap("overflowIcon"));
-      } else {
-
-      }
-    }
-
-    if (bar != null) {
-
-      // ActionBar only properties...
-
-      if (firstCall || boolHasChanged("hidden", prev, next)) {
-        boolean hidden = false;
-
-        if (next.hasKey("hidden")) {
-          hidden = next.getBoolean("hidden");
-        }
-
-        if (hidden && bar.isShowing()) {
-          bar.hide();
-        } else if (!hidden && !bar.isShowing()) {
-          bar.show();
-        }
-      }
-
-      if (firstCall || boolHasChanged("displayHomeAsUp", prev, next)) {
-        if (next.hasKey("displayHomeAsUp")) {
-          boolean displayHomeAsUp = next.getBoolean("displayHomeAsUp");
-          bar.setDisplayHomeAsUpEnabled(displayHomeAsUp);
-        } else {
-          bar.setDisplayHomeAsUpEnabled(defaults.displayHomeAsUp);
-        }
-      }
-
-      if (firstCall || boolHasChanged("homeButtonEnabled", prev, next)) {
-        if (next.hasKey("homeButtonEnabled")) {
-          boolean homeButtonEnabled = next.getBoolean("homeButtonEnabled");
-          bar.setHomeButtonEnabled(homeButtonEnabled);
-        } else {
-
-        }
-      }
-
-      if (firstCall || boolHasChanged("showHome", prev, next)) {
-        if (next.hasKey("showHome")) {
-          boolean showHome = next.getBoolean("showHome");
-          bar.setDisplayShowHomeEnabled(showHome);
-        } else {
-          bar.setDisplayShowHomeEnabled(defaults.showHome);
-        }
-      }
-
-      if (firstCall || boolHasChanged("showTitle", prev, next)) {
-        if (next.hasKey("showTitle")) {
-          boolean showTitle = next.getBoolean("showTitle");
-          bar.setDisplayShowTitleEnabled(showTitle);
-        } else {
-          bar.setDisplayShowTitleEnabled(defaults.showTitle);
-        }
-      }
-
-      if (firstCall || boolHasChanged("showCustom", prev, next)) {
-        if (next.hasKey("showCustom")) {
-          boolean showCustom = next.getBoolean("showCustom");
-          bar.setDisplayShowCustomEnabled(showCustom);
-        } else {
-          bar.setDisplayShowCustomEnabled(defaults.showCustom);
-        }
-      }
-
-      if (firstCall || boolHasChanged("useLogo", prev, next)) {
-        if (next.hasKey("useLogo")) {
-          boolean useLogo = next.getBoolean("useLogo");
-          bar.setDisplayUseLogoEnabled(useLogo);
-        } else {
-          bar.setDisplayUseLogoEnabled(defaults.useLogo);
-        }
-      }
-
-      if (firstCall || boolHasChanged("useShowHideAnimation", prev, next)) {
-        if (next.hasKey("useShowHideAnimation")) {
-          boolean useShowHideAnimation = next.getBoolean("useShowHideAnimation");
-          bar.setShowHideAnimationEnabled(useShowHideAnimation);
-        } else {
-          bar.setShowHideAnimationEnabled(defaults.useShowHideAnimation);
-        }
-      }
-
-      if (firstCall || boolHasChanged("hideOnScroll", prev, next)) {
-        if (next.hasKey("hideOnScroll")) {
-          boolean hideOnScroll = next.getBoolean("hideOnScroll");
-          bar.setHideOnContentScrollEnabled(hideOnScroll);
-        } else {
-          bar.setHideOnContentScrollEnabled(defaults.hideOnScroll);
-        }
-      }
-
-      if (firstCall || numberHasChanged("hideOffset", prev, next)) {
-        if (next.hasKey("hideOffset")) {
-          int hideOffset = next.getInt("hideOffset");
-          bar.setHideOffset(hideOffset);
-        } else {
-          bar.setHideOffset(defaults.hideOffset);
-        }
-      }
-    }
-
     reconcileStatusBarStyle(
-      component.getActivity(),
-      prev,
-      next,
-      firstCall
+        component.getActivity(),
+        prev,
+        next,
+        firstCall
     );
-
-    // TODO(lmr): this doesnt appear to work like i think it should.
-//    if (firstCall || stringHasChanged("textAlign", prev, next)) {
-//      if (next.hasKey("textAlign")) {
-//        String textAlign = next.getString("textAlign");
-//        int alignment = TextAlignmentFromString(textAlign);
-//        toolbar.setTextAlignment(alignment);
-//      } else {
-//        toolbar.setTextAlignment(defaults.textAlignment);
-//      }
-//    }
-
-//    bar.setHomeAsUpIndicator(drawable); // TODO
-//    toolbar.setForeground(drawable);
-//    toolbar.setCameraDistance(0.1);
-//    toolbar.setBackgroundTintMode(PorterDuff.Mode.CLEAR);
-//    toolbar.setForegroundTintMode(PorterDuff.Mode.DARKEN);
-
-    // we are just going to *always* invalidate this menu when we
-    // reconcile, and handle everything in `prepareOptionsMenu`.
-    component.getActivity().supportInvalidateOptionsMenu();
-  }
-
-  public void prepareOptionsMenu(
-      final ReactInterface component,
-      ReactToolbar toolbar,
-      ActionBar bar,
-      Menu menu,
-      ReadableMap prev,
-      ReadableMap next
-  ) {
-    Log.d(TAG, "prepareOptionsMenu");
-
-    if (arrayHasChanged("rightButtons", prev, next)) {
-      if (next.hasKey("rightButtons")) {
-        ReadableArray buttons = next.getArray("rightButtons");
-        menu.clear();
-        toolbar.setRightButtons(menu, buttons, component);
-      } else {
-        menu.clear();
-      }
-    }
-    if (stringHasChanged("rightTitle", prev, next)) {
-      if (next.hasKey("rightTitle")) {
-        String rightTitle = next.getString("rightTitle");
-        MenuItem item = menu.add(rightTitle);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-          @Override
-          public boolean onMenuItemClick(MenuItem item) {
-            component.emitEvent("onRightPress", null);
-            return true;
-          }
-        });
-      }
-    }
-    if (mapHasChanged("rightImage", prev, next)) {
-      // TODO(lmr):
-    }
-  }
-
-  public boolean onOptionsItemSelected(
-      final ReactInterface component,
-      ReactToolbar toolbar,
-      ActionBar bar,
-      MenuItem item,
-      ReadableMap properties
-  ) {
-    // TODO(lmr): we need to make this possible somehow
-//    if (item.getItemId() == android.R.id.home) {
-//      component.emitEvent(ON_LEFT_PRESS, null);
-//      if (reactNavigationCoordinator.getDismissCloseBehavior(component)) {
-//        component.dismiss();
-//        return true; // consume the event
-//      } else {
-//        return super.onOptionsItemSelected(item);
-//      }
-//    }
-    if (item.getItemId() == android.R.id.home) {
-//      component.dismiss();
-      // set result here?
-      // do we ever want to dismiss? do we want "closeBehavior"?
-      component.getActivity().finish();
-      return false;
-    }
-
-//    component.emitEvent("onRightPress", null);
-    return true;
   }
 
   public void makeTabItem(
@@ -594,11 +259,12 @@ public class DefaultNavigationImplementation implements NavigationImplementation
     }
 
     // not sure if we want/need to set anything on the itemview itself. hacky.
-//    BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigation.getChildAt(0);
-//    BottomNavigationItemView itemView = (BottomNavigationItemView)menuView.getChildAt(index);
+    //    BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigation.getChildAt(0);
+    //    BottomNavigationItemView itemView = (BottomNavigationItemView)menuView.getChildAt(index);
   }
 
-  private static ColorStateList colorStatesFromPrefix(String prefix, ReadableMap props, int defaultColor) {
+  private static ColorStateList colorStatesFromPrefix(String prefix, ReadableMap props,
+      int defaultColor) {
 
     String active = String.format("%sActiveColor", prefix);
     String selected = String.format("%sSelectedColor", prefix);
@@ -610,16 +276,15 @@ public class DefaultNavigationImplementation implements NavigationImplementation
     int activeColor = props.hasKey(active) ? props.getInt(active) : selectedColor;
     int disabledColor = props.hasKey(disabled) ? props.getInt(disabled) : normalColor;
 
-
     return new ColorStateList(
-        new int[][]{
-            new int[]{android.R.attr.state_pressed},
-            new int[]{android.R.attr.state_checked},
-            new int[]{android.R.attr.state_enabled},
-            new int[]{-android.R.attr.state_enabled},
-            new int[]{} // this should be empty to make default color as we want
+        new int[][] {
+            new int[] {android.R.attr.state_pressed},
+            new int[] {android.R.attr.state_checked},
+            new int[] {android.R.attr.state_enabled},
+            new int[] {-android.R.attr.state_enabled},
+            new int[] {} // this should be empty to make default color as we want
         },
-        new int[]{
+        new int[] {
             activeColor,
             selectedColor,
             normalColor,
@@ -637,9 +302,9 @@ public class DefaultNavigationImplementation implements NavigationImplementation
   ) {
 
     // TODO(lmr):
-//    bottomNavigation.setForegroundTintMode(mode);
-//    bottomNavigation.setBackgroundTintMode(mode);
-//    bottomNavigation.setBackgroundTintMode(PorterDuff.Mode.DARKEN);
+    //    bottomNavigation.setForegroundTintMode(mode);
+    //    bottomNavigation.setBackgroundTintMode(mode);
+    //    bottomNavigation.setBackgroundTintMode(PorterDuff.Mode.DARKEN);
 
     if (boolHasChanged("enabled", prev, next)) {
       if (next.hasKey("enabled")) {
@@ -659,8 +324,8 @@ public class DefaultNavigationImplementation implements NavigationImplementation
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       if (numberHasChanged("elevation", prev, next)) {
-        if(next.hasKey("elevation")) {
-          bottomNavigation.setElevation((float)next.getDouble("elevation"));
+        if (next.hasKey("elevation")) {
+          bottomNavigation.setElevation((float) next.getDouble("elevation"));
         } else {
           bottomNavigation.setElevation(defaults.elevation);
         }
@@ -671,9 +336,9 @@ public class DefaultNavigationImplementation implements NavigationImplementation
     bottomNavigation.setItemTextColor(colorStatesFromPrefix("itemText", next, Color.BLACK));
 
     // TODO(lmr): backgroundTintList doesn't seem to have an effect.
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//      bottomNavigation.setBackgroundTintList(colorStatesFromPrefix("background", next, Color.GRAY));
-//    } else
+    //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    //      bottomNavigation.setBackgroundTintList(colorStatesFromPrefix("background", next, Color.GRAY));
+    //    } else
     if (numberHasChanged("backgroundColor", prev, next)) {
       if (next.hasKey("backgroundColor")) {
         bottomNavigation.setBackgroundColor(next.getInt("backgroundColor"));
@@ -683,8 +348,8 @@ public class DefaultNavigationImplementation implements NavigationImplementation
     }
   }
 
-
-  private static boolean shouldBail(String key, ReadableType type, ReadableMap prev, ReadableMap next) {
+  private static boolean shouldBail(String key, ReadableType type, ReadableMap prev,
+      ReadableMap next) {
     boolean inNext = next.hasKey(key);
     boolean inPrev = prev.hasKey(key);
 

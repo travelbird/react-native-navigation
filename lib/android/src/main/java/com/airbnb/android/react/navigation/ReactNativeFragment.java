@@ -14,14 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Animation;
-
 import com.airbnb.android.R;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
@@ -29,14 +25,13 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
 import com.facebook.react.modules.core.PermissionListener;
-
 import java.util.Locale;
 
 import static com.airbnb.android.react.navigation.ReactNativeIntents.EXTRA_IS_DISMISS;
 import static com.airbnb.android.react.navigation.ReactNativeUtils.maybeEmitEvent;
 
 public class ReactNativeFragment extends Fragment implements ReactInterface,
-        ReactNativeFragmentViewGroup.KeyListener {
+    ReactNativeFragmentViewGroup.KeyListener {
   private static final String TAG = ReactNativeFragment.class.getSimpleName();
   private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
 
@@ -48,13 +43,16 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   private static final String INSTANCE_ID_PROP = "nativeNavigationInstanceId";
   private static final String ON_BUTTON_PRESS = "onButtonPress";
   private static final String INITIAL_BAR_HEIGHT_PROP = "nativeNavigationInitialBarHeight";
-  private static final int RENDER_TIMEOUT_IN_MS = 1700; // TODO(lmr): put this back down when done debugging
+  private static final int RENDER_TIMEOUT_IN_MS = 1700;
+  // TODO(lmr): put this back down when done debugging
 
   // An incrementing ID to identify each ReactNativeActivity instance (used in `instanceId`)
   private static int UUID = 1;
 
-  private ReactNavigationCoordinator reactNavigationCoordinator = ReactNavigationCoordinator.sharedInstance;
-  private ReactInstanceManager reactInstanceManager = reactNavigationCoordinator.getReactInstanceManager();
+  private ReactNavigationCoordinator reactNavigationCoordinator =
+      ReactNavigationCoordinator.sharedInstance;
+  private ReactInstanceManager reactInstanceManager =
+      reactNavigationCoordinator.getReactInstanceManager();
   private final Runnable timeoutCallback = new Runnable() {
     @Override
     public void run() {
@@ -66,7 +64,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   private String instanceId;
   private boolean isSharedElementTransition;
   private boolean isWaitingForRenderToFinish = false;
-  private float barHeight;
   private ReadableMap initialConfig = ConversionUtil.EMPTY_MAP;
   private ReadableMap previousConfig = ConversionUtil.EMPTY_MAP;
   private ReadableMap renderedConfig = ConversionUtil.EMPTY_MAP;
@@ -76,15 +73,14 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   private final Handler handler = new Handler();
   private PermissionListener permissionListener;
   private AppCompatActivity activity;
-  private ReactToolbar toolbar;
   private View loadingView;
 
   static ReactNativeFragment newInstance(String moduleName, @Nullable Bundle props) {
     ReactNativeFragment frag = new ReactNativeFragment();
     Bundle args = new BundleBuilder()
-            .putString(ReactNativeIntents.EXTRA_MODULE_NAME, moduleName)
-            .putBundle(ReactNativeIntents.EXTRA_PROPS, props)
-            .toBundle();
+        .putString(ReactNativeIntents.EXTRA_MODULE_NAME, moduleName)
+        .putBundle(ReactNativeIntents.EXTRA_PROPS, props)
+        .toBundle();
     frag.setArguments(args);
     return frag;
   }
@@ -125,18 +121,18 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       // TODO(lmr): need a different way of doing this
       // TODO(lmr): move to utils
       reactInstanceManager.addReactInstanceEventListener(
-              new ReactInstanceManager.ReactInstanceEventListener() {
+          new ReactInstanceManager.ReactInstanceEventListener() {
+            @Override
+            public void onReactContextInitialized(ReactContext context) {
+              reactInstanceManager.removeReactInstanceEventListener(this);
+              handler.post(new Runnable() {
                 @Override
-                public void onReactContextInitialized(ReactContext context) {
-                  reactInstanceManager.removeReactInstanceEventListener(this);
-                  handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                      onAttachWithReactContext();
-                    }
-                  });
+                public void run() {
+                  onAttachWithReactContext();
                 }
               });
+            }
+          });
     } else {
       onAttachWithReactContext();
       // in this case, we end up waiting for the first render to complete
@@ -150,7 +146,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
         }
       }, RENDER_TIMEOUT_IN_MS);
     }
-//    activityManager = new ReactInterfaceManager(this);
+    //    activityManager = new ReactInterfaceManager(this);
     reactNavigationCoordinator.registerComponent(this, instanceId);
   }
 
@@ -163,7 +159,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
     if (!isSuccessfullyInitialized()) {
       // TODO(lmr): should we make this configurable?
-//      ReactNativeUtils.showAlertBecauseChecksFailed(getActivity(), null);
+      //      ReactNativeUtils.showAlertBecauseChecksFailed(getActivity(), null);
       return;
     }
     String moduleName = getArguments().getString(ReactNativeIntents.EXTRA_MODULE_NAME);
@@ -179,20 +175,10 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     }
 
     getImplementation().reconcileNavigationProperties(
-            this,
-            getToolbar(),
-            activity.getSupportActionBar(),
-            ConversionUtil.EMPTY_MAP,
-            renderedConfig,
-            true
-    );
-
-    barHeight = getImplementation().getBarHeight(
-            this,
-            getToolbar(),
-            activity.getSupportActionBar(),
-            renderedConfig,
-            true
+        this,
+        ConversionUtil.EMPTY_MAP,
+        renderedConfig,
+        true
     );
 
     reactRootView.startReactApplication(reactInstanceManager, moduleName, props);
@@ -200,28 +186,14 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-          Bundle savedInstanceState) {
+      Bundle savedInstanceState) {
     postponeEnterTransition();
     View v = inflater.inflate(R.layout.fragment_react_native, container, false);
-    toolbar = (ReactToolbar) v.findViewById(R.id.toolbar);
     // TODO(lmr): should we make the "loading" XML configurable?
     loadingView = v.findViewById(R.id.loading_view);
     contentContainer = (ReactNativeFragmentViewGroup) v.findViewById(R.id.content_container);
     contentContainer.setKeyListener(this);
     activity = (AppCompatActivity) getActivity();
-    activity.setSupportActionBar(toolbar);
-
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Activity activity = ReactNativeFragment.this.getActivity();
-        if (activity instanceof ScreenCoordinatorComponent) {
-          ((ScreenCoordinatorComponent) activity).getScreenCoordinator().onBackPressed();
-        } else {
-          activity.onBackPressed();
-        }
-      }
-    });
 
     String moduleName = getArguments().getString(EXTRA_REACT_MODULE_NAME);
     Log.d(TAG, "onCreateView " + moduleName);
@@ -233,10 +205,10 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     if (initialConfig.hasKey("screenColor")) {
       int backgroundColor = initialConfig.getInt("screenColor");
       // TODO(lmr): do we need to create a style for this?...
-//        if (backgroundColor == Color.TRANSPARENT) {
-//            // This needs to happen before setContentView gets called
-//            setTheme(R.style.Theme_Airbnb_ReactTranslucent);
-//        }
+      //        if (backgroundColor == Color.TRANSPARENT) {
+      //            // This needs to happen before setContentView gets called
+      //            setTheme(R.style.Theme_Airbnb_ReactTranslucent);
+      //        }
     }
 
     return v;
@@ -261,7 +233,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-//    activityManager.onActivityResult(requestCode, resultCode, data);
+    //    activityManager.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override
@@ -278,13 +250,12 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
         reactRootView.unmountReactApplication();
       } else {
         contentContainer.unmountReactApplicationAfterAnimation(reactRootView);
-
       }
       reactRootView = null;
     }
     if (getActivity() instanceof ScreenCoordinatorComponent) {
       ScreenCoordinator screenCoordinator =
-              ((ScreenCoordinatorComponent) getActivity()).getScreenCoordinator();
+          ((ScreenCoordinatorComponent) getActivity()).getScreenCoordinator();
       if (screenCoordinator != null) {
         // In some cases such as TabConfig, the screen may be loaded before there is a screen
         // coordinator but it doesn't live inside of any back stack and isn't visible.
@@ -304,7 +275,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   public void onResume() {
     super.onResume();
     Log.d(TAG, "onResume");
-    updateBarHeightIfNeeded();
     emitEvent(ON_APPEAR, null);
   }
 
@@ -340,9 +310,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   @Override
   public void onRequestPermissionsResult(
-          int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (permissionListener != null &&
-            permissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+        permissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
       permissionListener = null;
     }
   }
@@ -354,7 +324,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   public void dismiss() {
     Intent intent = new Intent()
-            .putExtra(EXTRA_IS_DISMISS, isDismissible());
+        .putExtra(EXTRA_IS_DISMISS, isDismissible());
     getActivity().setResult(Activity.RESULT_OK, intent);
     getActivity().finish();
   }
@@ -367,11 +337,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   @Override
   public ReactRootView getReactRootView() {
     return reactRootView;
-  }
-
-  @Override
-  public ReactToolbar getToolbar() {
-    return toolbar;
   }
 
   @Override
@@ -396,28 +361,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     }
   }
 
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    ReactToolbar toolbar = getToolbar();
-    if (toolbar != null) {
-      // 0 will prevent menu from getting inflated, since we are inflating manually
-      toolbar.onCreateOptionsMenu(0, menu, inflater);
-    }
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    getImplementation().prepareOptionsMenu(
-            this,
-            getToolbar(),
-            null,
-            menu,
-            this.previousConfig,
-            this.renderedConfig
-    );
-    super.onPrepareOptionsMenu(menu);
-  }
-
   private boolean isSuccessfullyInitialized() {
     return reactNavigationCoordinator.isSuccessfullyInitialized();
   }
@@ -429,19 +372,17 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   public void emitEvent(String eventName, Object object) {
     if (isSuccessfullyInitialized()) {
       String key =
-              String.format(Locale.ENGLISH, "NativeNavigationScreen.%s.%s", eventName, instanceId);
+          String.format(Locale.ENGLISH, "NativeNavigationScreen.%s.%s", eventName, instanceId);
       maybeEmitEvent(reactInstanceManager.getCurrentReactContext(), key, object);
     }
   }
 
   private void reconcileNavigationProperties() {
     getImplementation().reconcileNavigationProperties(
-            this,
-            getToolbar(),
-            null,
-            this.previousConfig,
-            this.renderedConfig,
-            false
+        this,
+        this.previousConfig,
+        this.renderedConfig,
+        false
     );
   }
 
@@ -450,26 +391,11 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     this.previousConfig = this.renderedConfig;
     this.renderedConfig = ConversionUtil.combine(this.initialConfig, properties);
     reconcileNavigationProperties();
-    updateBarHeightIfNeeded();
-  }
-
-  private void updateBarHeightIfNeeded() {
-    float newHeight = getImplementation().getBarHeight(
-            this,
-            getToolbar(),
-            activity.getSupportActionBar(),
-            renderedConfig,
-            false
-    );
-    if (newHeight != barHeight) {
-      barHeight = newHeight;
-      emitEvent("onBarHeightChanged", barHeight);
-    }
   }
 
   @TargetApi(Build.VERSION_CODES.M)
   public void requestPermissions(String[] permissions, int requestCode,
-          PermissionListener listener) {
+      PermissionListener listener) {
     permissionListener = listener;
     requestPermissions(permissions, requestCode);
   }

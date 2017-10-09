@@ -54,23 +54,16 @@ class NavigatorModule extends ReactContextBaseJavaModule {
       properties = ConversionUtil.EMPTY_MAP;
     }
     coordinator.registerScreen(
-      sceneName,
-      properties,
-      waitForRender,
-      mode
+        sceneName,
+        properties,
+        waitForRender,
+        mode
     );
   }
 
   @SuppressWarnings("unused")
   @ReactMethod
   public void setScreenProperties(final ReadableMap properties, final String instanceId) {
-//    final Map<String, Object> props = payloadToMap(properties);
-    withToolbar(instanceId, new NavigationModifier() {
-      @Override
-      public void call(ReactInterface component, ReactToolbar toolbar) {
-        component.receiveNavigationProperties(properties);
-      }
-    });
   }
 
   @SuppressWarnings({"UnusedParameters", "unused"})
@@ -124,7 +117,8 @@ class NavigatorModule extends ReactContextBaseJavaModule {
 
   @SuppressWarnings("UnusedParameters")
   @ReactMethod
-  public void present(final String screenName, final ReadableMap props, final ReadableMap options, final Promise promise) {
+  public void present(final String screenName, final ReadableMap props, final ReadableMap options,
+      final Promise promise) {
     handler.post(new Runnable() {
       @Override
       public void run() {
@@ -133,7 +127,7 @@ class NavigatorModule extends ReactContextBaseJavaModule {
           return;
         }
         ensureCoordinatorComponent(activity);
-          ((ScreenCoordinatorComponent) activity).getScreenCoordinator().presentScreen(
+        ((ScreenCoordinatorComponent) activity).getScreenCoordinator().presentScreen(
             screenName,
             ConversionUtil.toBundle(props),
             ConversionUtil.toBundle(options),
@@ -154,7 +148,8 @@ class NavigatorModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void dismiss(final ReadableMap payload, @SuppressWarnings("UnusedParameters") boolean animated) {
+  public void dismiss(final ReadableMap payload,
+      @SuppressWarnings("UnusedParameters") boolean animated) {
     handler.post(new Runnable() {
       @Override
       public void run() {
@@ -187,21 +182,7 @@ class NavigatorModule extends ReactContextBaseJavaModule {
   }
 
   private interface NavigationModifier {
-    void call(ReactInterface component, ReactToolbar toolbar);
-  }
-
-  private void withToolbar(String id, final NavigationModifier modifier) {
-    final ReactInterface component = coordinator.componentFromId(id);
-    if (component != null) {
-      handler.post(new Runnable() {
-        @Override public void run() {
-          ReactToolbar toolbar = component.getToolbar();
-          if (toolbar != null) {
-            modifier.call(component, toolbar);
-          }
-        }
-      });
-    }
+    void call(ReactInterface component);
   }
 
   private void startActivityWithPromise(final Activity activity, final Intent intent,
