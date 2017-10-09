@@ -46,6 +46,8 @@ public class MainActivity extends ReactAwareActivity implements ScreenCoordinato
 
   @Override
   public void onBackPressed() {
-    screenCoordinator.onBackPressed();
+    if (!screenCoordinator.onBackPressed()) {
+      super.onBackPressed();
+    }
   }
 }

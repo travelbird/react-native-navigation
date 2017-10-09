@@ -30,7 +30,7 @@ public abstract class ReactAwareActivity extends AppCompatActivity
 
   @Override
   public void invokeDefaultOnBackPressed() {
-    onBackPressed();
+    super.onBackPressed();
   }
 
   /**

@@ -43,7 +43,8 @@ public class ScreenCoordinator {
 
   enum PresentAnimation {
     Modal(R.anim.slide_up, R.anim.delay, R.anim.delay, R.anim.slide_down),
-    Push(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right),
+    Push(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left,
+        R.anim.slide_out_right),
     Fade(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
 
     @AnimRes int enter;
@@ -62,7 +63,8 @@ public class ScreenCoordinator {
   private final Stack<BackStack> backStacks = new Stack<>();
   private final AppCompatActivity activity;
   private final ScreenCoordinatorLayout container;
-  private ReactNavigationCoordinator reactNavigationCoordinator = ReactNavigationCoordinator.sharedInstance;
+  private ReactNavigationCoordinator reactNavigationCoordinator =
+      ReactNavigationCoordinator.sharedInstance;
 
   private int stackId = 0;
 
@@ -106,8 +108,8 @@ public class ScreenCoordinator {
   }
 
   /**
-   * Will try to push a native screen if a {@link NativeScreenFactory factory} is available for {@code moduleName}.
-   * Will return {@code true} if a screen was pushed, otherwise false.
+   * Will try to push a native screen if a {@link NativeScreenFactory factory} is available for
+   * {@code moduleName}. Will return {@code true} if a screen was pushed, otherwise false.
    */
   @CheckResult
   boolean pushNativeScreen(String moduleName, @Nullable Bundle props, @Nullable Bundle options) {
@@ -135,31 +137,31 @@ public class ScreenCoordinator {
 
   public void pushScreen(Fragment fragment, @Nullable Bundle options) {
     FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction()
-            .setAllowOptimization(true);
+        .setAllowOptimization(true);
     Fragment currentFragment = getCurrentFragment();
     if (currentFragment == null) {
       throw new IllegalStateException("There is no current fragment. You must present one first.");
     }
 
     if (ViewUtils.isAtLeastLollipop() && options != null && options.containsKey(TRANSITION_GROUP)) {
-        setupFragmentForSharedElement(currentFragment,  fragment, ft, options);
+      setupFragmentForSharedElement(currentFragment, fragment, ft, options);
     } else {
       PresentAnimation anim = PresentAnimation.Push;
       ft.setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit);
     }
     BackStack bsi = getCurrentBackStack();
     ft
-            .detach(currentFragment)
-            .add(container.getId(), fragment)
-            .addToBackStack(null)
-            .commit();
+        .detach(currentFragment)
+        .add(container.getId(), fragment)
+        .addToBackStack(null)
+        .commit();
     bsi.pushFragment(fragment);
     Log.d(TAG, toString());
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private void setupFragmentForSharedElement(
-          Fragment outFragment, Fragment inFragment, FragmentTransaction transaction, Bundle options) {
+      Fragment outFragment, Fragment inFragment, FragmentTransaction transaction, Bundle options) {
     FragmentSharedElementTransition transition = new FragmentSharedElementTransition();
     inFragment.setSharedElementEnterTransition(transition);
     inFragment.setSharedElementReturnTransition(transition);
@@ -168,9 +170,9 @@ public class ScreenCoordinator {
     inFragment.setReturnTransition(fade);
     ViewGroup rootView = (ViewGroup) outFragment.getView();
     ViewGroup transitionGroup = ViewUtils.findViewGroupWithTag(
-            rootView,
-            R.id.react_shared_element_group_id,
-            options.getString(TRANSITION_GROUP));
+        rootView,
+        R.id.react_shared_element_group_id,
+        options.getString(TRANSITION_GROUP));
     AutoSharedElementCallback.addSharedElementsToFragmentTransaction(transaction, transitionGroup);
   }
 
@@ -242,19 +244,31 @@ public class ScreenCoordinator {
     }
   }
 
-  public void onBackPressed() {
-    pop();
-  }
-
-  public void pop() {
+  /**
+   * Returns {@code true} if the back stack was handled an the host should not proceed with any
+   * action, otherwise {@code false} and the caller should handle the back press.
+   */
+  @CheckResult
+  public boolean onBackPressed() {
     BackStack bsi = getCurrentBackStack();
+
+    // If the stack is empty the caller should handle the back navigation.
+    if (bsi.getSize() == 0) {
+      return false;
+    }
+
+    // With one item in stack dismiss screen.
     if (bsi.getSize() == 1) {
       dismiss();
-      return;
+      return true;
     }
+
     bsi.popFragment();
     activity.getSupportFragmentManager().popBackStack();
+
     Log.d(TAG, toString());
+
+    return true;
   }
 
   public void dismiss() {
@@ -283,7 +297,7 @@ public class ScreenCoordinator {
     }
 
     activity.getSupportFragmentManager()
-            .popBackStackImmediate(bsi.getTag(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        .popBackStackImmediate(bsi.getTag(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
     Log.d(TAG, toString());
   }
 
@@ -301,7 +315,7 @@ public class ScreenCoordinator {
   private void deliverPromise(Promise promise, int resultCode, Map<String, Object> payload) {
     if (promise != null) {
       Map<String, Object> newPayload =
-              MapBuilder.of(EXTRA_CODE, resultCode, EXTRA_PAYLOAD, payload);
+          MapBuilder.of(EXTRA_CODE, resultCode, EXTRA_PAYLOAD, payload);
       promise.resolve(ConversionUtil.toWritableMap(newPayload));
     }
   }

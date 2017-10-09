@@ -176,7 +176,7 @@ class NavigatorModule extends ReactContextBaseJavaModule {
           return;
         }
         ensureCoordinatorComponent(activity);
-        ((ScreenCoordinatorComponent) activity).getScreenCoordinator().pop();
+        ((ScreenCoordinatorComponent) activity).getScreenCoordinator().onBackPressed();
       }
     });
   }
