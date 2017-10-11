@@ -149,7 +149,7 @@ public class ScreenCoordinator {
       PresentAnimation anim = PresentAnimation.Push;
       ft.setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit);
     }
-    BackStack bsi = getCurrentBackStack();
+    BackStack bsi = backStacks.peek();
     ft
         .detach(currentFragment)
         .add(container.getId(), fragment)
@@ -250,12 +250,12 @@ public class ScreenCoordinator {
    */
   @CheckResult
   public boolean onBackPressed() {
-    BackStack bsi = getCurrentBackStack();
-
     // If the stack is empty the caller should handle the back navigation.
-    if (bsi.getSize() == 0) {
+    if (backStacks.empty()) {
       return false;
     }
+
+    BackStack bsi = backStacks.peek();
 
     // With one item in stack dismiss screen.
     if (bsi.getSize() == 1) {
@@ -331,10 +331,6 @@ public class ScreenCoordinator {
   @Nullable
   private Fragment getCurrentFragment() {
     return activity.getSupportFragmentManager().findFragmentById(container.getId());
-  }
-
-  private BackStack getCurrentBackStack() {
-    return backStacks.peek();
   }
 
   @NonNull
