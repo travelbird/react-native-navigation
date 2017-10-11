@@ -52,7 +52,7 @@ public class TabCoordinator {
     if (currentTabId == null) {
       return false;
     }
-    screenCoordinators.get(currentTabId).pop();
+    screenCoordinators.get(currentTabId).onBackPressed();
     return true;
   }
 

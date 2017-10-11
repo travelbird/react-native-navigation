@@ -99,7 +99,7 @@ public class NativeFragment extends Fragment {
     view.findViewById(R.id.pop).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        getScreenCoordinator().pop();
+        getScreenCoordinator().onBackPressed();
       }
     });
 
