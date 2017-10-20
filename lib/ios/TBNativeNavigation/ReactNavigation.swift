@@ -42,6 +42,10 @@ class ReactNavigation: NSObject {
     }
   }
 
+  func pushEvent(_ eventName: String, _ props: [String: AnyObject]) {
+    // TODO(vlad): please implement.
+  }
+
   func setCloseBehavior(_ closeBehavior: String, withInstanceId instanceId: String) {
     print("setting closeBehavior: \(closeBehavior)")
     if let vc = coordinator.viewControllerForId(instanceId) {

@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import com.airbnb.android.R;
+import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
@@ -69,6 +70,12 @@ public class ScreenCoordinator {
   private int stackId = 0;
 
   /**
+   * Event listener to be access from the {@linkplain NativeModule} for JS -> Native event
+   * propagation.
+   */
+  @Nullable ReactEventListener reactEventListener;
+
+  /**
    * When we dismiss a back stack, the fragment manager would normally execute the latest fragment's
    * pop exit animation. However, if we present A as a modal, push, B, then dismiss(), the latest
    * pop exit animation would be from when B was pushed, not from when A was presented.
@@ -98,6 +105,10 @@ public class ScreenCoordinator {
   @CallSuper
   public void onPause() {
     reactNavigationCoordinator.screenCoordinator = null;
+  }
+
+  public void setReactEventListener(@Nullable ReactEventListener reactEventListener) {
+    this.reactEventListener = reactEventListener;
   }
 
   /**
