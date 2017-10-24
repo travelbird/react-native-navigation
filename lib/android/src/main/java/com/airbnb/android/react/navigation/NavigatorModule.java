@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.Promise;
@@ -64,6 +65,21 @@ class NavigatorModule extends ReactContextBaseJavaModule {
   @SuppressWarnings("unused")
   @ReactMethod
   public void setScreenProperties(final ReadableMap properties, final String instanceId) {
+  }
+
+  @ReactMethod
+  public void pushEvent(@NonNull final String eventName, @Nullable final ReadableMap props) {
+    final ScreenCoordinator screenCoordinator = coordinator.screenCoordinator;
+    if (screenCoordinator != null) {
+      final ReactEventListener reactEventListener = screenCoordinator.reactEventListener;
+      if (reactEventListener != null) {
+        handler.post(new Runnable() {
+          @Override public void run() {
+            reactEventListener.onEvent(eventName, ConversionUtil.toBundle(props));
+          }
+        });
+      }
+    }
   }
 
   @SuppressWarnings({"UnusedParameters", "unused"})

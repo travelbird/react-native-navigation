@@ -60,6 +60,10 @@ export default class NavigationExampleScreen extends Component {
           title="Start Native Screen 2"
           onPress={() => Navigator.push('NativeFragment2')}
         />
+        <Row
+          title="Event"
+          onPress={() => Navigator.pushEvent("TestEvent", { "key1": "test"})}
+        />
       </Screen>
     );
   }

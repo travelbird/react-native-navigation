@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import NativeNavigation
+import ReactNativeNavigation
 import React
 
 @UIApplicationMain

@@ -12,6 +12,8 @@ private let VERSION: Int = 2
 
 @objc(ReactNavigation)
 class ReactNavigation: NSObject {
+    
+  fileprivate var reactEventListener: ReactEventListener?
   fileprivate let coordinator: ReactNavigationCoordinator
 
   override init() {
@@ -40,6 +42,17 @@ class ReactNavigation: NSObject {
         vc.setNavigationBarProperties(props: props)
       }
     }
+  }
+
+  func pushEvent(eventName: String, props: [String: Any]) {
+    
+    if let eventListener = reactEventListener, let onEvent = eventListener.onEvent {
+        onEvent(eventName, props)
+    }
+  }
+    
+  func setReactEventListener(_ listener: ReactEventListener) {
+    reactEventListener = listener
   }
 
   func setCloseBehavior(_ closeBehavior: String, withInstanceId instanceId: String) {
