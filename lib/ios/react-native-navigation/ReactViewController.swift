@@ -98,7 +98,7 @@ open class ReactViewController: UIViewController {
     self.init(moduleName: moduleName, props: [:])
   }
 
-  public init(moduleName: String, props: [String: AnyObject]) {
+  @objc public init(moduleName: String, props: [String: AnyObject]) {
     self.nativeNavigationInstanceId = generateId(moduleName)
     self.moduleName = moduleName
 
