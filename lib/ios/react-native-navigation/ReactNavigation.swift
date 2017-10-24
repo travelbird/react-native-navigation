@@ -46,9 +46,9 @@ class ReactNavigation: NSObject {
 
   func pushEvent(eventName: String, props: [String: Any]) {
     
-//    if let reactEventListener = reactEventListener, onEvent = reactEventListener.onEvent {
-//        onEvent(eventName, props)
-//    }
+    if let eventListener = reactEventListener, let onEvent = eventListener.onEvent {
+        onEvent(eventName, props)
+    }
   }
     
   func setReactEventListener(_ listener: ReactEventListener) {
