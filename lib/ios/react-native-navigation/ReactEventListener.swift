@@ -7,5 +7,5 @@
 
 class ReactEventListener {
     
-    var onEvent:((eventName: String, props: [String : Any]) -> Void)?
+    var onEvent:((_ eventName: String, _ props: [String : Any]) -> Void)?
 }
