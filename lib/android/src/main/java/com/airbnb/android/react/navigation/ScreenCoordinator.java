@@ -201,6 +201,17 @@ public class ScreenCoordinator {
     presentScreen(fragment, PresentAnimation.Modal, promise);
   }
 
+  public void presentScreen(
+      String moduleName,
+      String toolbarTitle,
+      int toolbarPrimaryColor,
+      int toolbarSecondaryColor,
+      @Nullable Bundle props,
+      @Nullable Promise promise) {
+    Fragment fragment = ReactNativeFragment.newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor);
+    presentScreen(fragment, PresentAnimation.Modal, promise);
+  }
+
   public void presentScreen(Fragment fragment) {
     presentScreen(fragment, null);
   }
