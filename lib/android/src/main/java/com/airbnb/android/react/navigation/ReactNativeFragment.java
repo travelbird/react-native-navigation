@@ -281,7 +281,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       final int secondary = getArguments().getInt(EXTRA_TOOLBAR_SECONDARY_COLOR, Color.BLACK);
       final Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      toolbar.setTitle("Title");
+      getActivity().setTitle(getArguments().getString(EXTRA_TOOLBAR_TITLE));
       toolbar.setBackgroundColor(primary);
       toolbar.setTitleTextColor(secondary);
       final Drawable backIcon = getResources().getDrawable(R.drawable.n2_ic_arrow_back);
