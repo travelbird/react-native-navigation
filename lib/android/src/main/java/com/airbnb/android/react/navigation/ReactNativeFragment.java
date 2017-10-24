@@ -1,8 +1,19 @@
 package com.airbnb.android.react.navigation;
 
+import com.airbnb.android.R;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactRootView;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
+import com.facebook.react.modules.core.PermissionListener;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,13 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Animation;
-import com.airbnb.android.R;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactRootView;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
-import com.facebook.react.modules.core.PermissionListener;
+
 import java.util.Locale;
 
 import static com.airbnb.android.react.navigation.ReactNativeIntents.EXTRA_IS_DISMISS;
@@ -32,27 +38,39 @@ import static com.airbnb.android.react.navigation.ReactNativeUtils.maybeEmitEven
 
 public class ReactNativeFragment extends Fragment implements ReactInterface,
     ReactNativeFragmentViewGroup.KeyListener {
-  private static final String TAG = ReactNativeFragment.class.getSimpleName();
-  private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
 
   static final String EXTRA_REACT_MODULE_NAME = "REACT_MODULE_NAME";
+
   static final String EXTRA_REACT_PROPS = "REACT_PROPS";
+
   static final String EXTRA_IS_MODAL = "IS_MODAL";
+
+  static final String EXTRA_SHOW_TOOLBAR = "SHOW_TOOLBAR";
+
+  static final String EXTRA_TOOLBAR_TITLE = "TOOLBAR_TITLE";
+
+  static final String EXTRA_TOOLBAR_PRIMARY_COLOR = "TOOLBAR_PRIMARY_COLOR";
+
+  static final String EXTRA_TOOLBAR_SECONDARY_COLOR = "TOOLBAR_SECONDARY_COLOR";
+
+  private static final String TAG = ReactNativeFragment.class.getSimpleName();
+
   private static final String ON_DISAPPEAR = "onDisappear";
+
   private static final String ON_APPEAR = "onAppear";
+
   private static final String INSTANCE_ID_PROP = "nativeNavigationInstanceId";
+
   private static final String ON_BUTTON_PRESS = "onButtonPress";
+
   private static final String INITIAL_BAR_HEIGHT_PROP = "nativeNavigationInitialBarHeight";
+
   private static final int RENDER_TIMEOUT_IN_MS = 1700;
-  // TODO(lmr): put this back down when done debugging
 
   // An incrementing ID to identify each ReactNativeActivity instance (used in `instanceId`)
   private static int UUID = 1;
+  // TODO(lmr): put this back down when done debugging
 
-  private ReactNavigationCoordinator reactNavigationCoordinator =
-      ReactNavigationCoordinator.sharedInstance;
-  private ReactInstanceManager reactInstanceManager =
-      reactNavigationCoordinator.getReactInstanceManager();
   private final Runnable timeoutCallback = new Runnable() {
     @Override
     public void run() {
@@ -61,18 +79,37 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     }
   };
 
-  private String instanceId;
-  private boolean isSharedElementTransition;
-  private boolean isWaitingForRenderToFinish = false;
-  private ReadableMap initialConfig = ConversionUtil.EMPTY_MAP;
-  private ReadableMap previousConfig = ConversionUtil.EMPTY_MAP;
-  private ReadableMap renderedConfig = ConversionUtil.EMPTY_MAP;
-  private ReactNativeFragmentViewGroup contentContainer;
-  private ReactRootView reactRootView;
   //  private ReactInterfaceManager activityManager;
   private final Handler handler = new Handler();
+
+  private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
+
+  private ReactNavigationCoordinator reactNavigationCoordinator =
+      ReactNavigationCoordinator.sharedInstance;
+
+  private ReactInstanceManager reactInstanceManager =
+      reactNavigationCoordinator.getReactInstanceManager();
+
+  private String instanceId;
+
+  private boolean isSharedElementTransition;
+
+  private boolean isWaitingForRenderToFinish = false;
+
+  private ReadableMap initialConfig = ConversionUtil.EMPTY_MAP;
+
+  private ReadableMap previousConfig = ConversionUtil.EMPTY_MAP;
+
+  private ReadableMap renderedConfig = ConversionUtil.EMPTY_MAP;
+
+  private ReactNativeFragmentViewGroup contentContainer;
+
+  private ReactRootView reactRootView;
+
   private PermissionListener permissionListener;
+
   private AppCompatActivity activity;
+
   private View loadingView;
 
   static ReactNativeFragment newInstance(String moduleName, @Nullable Bundle props) {
@@ -85,32 +122,25 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     return frag;
   }
 
+  static ReactNativeFragment newInstance(String moduleName, @Nullable Bundle props, String toolbarTitle, int toolbarPrimaryColor,
+      int toollbarSecondaryColor) {
+    ReactNativeFragment frag = new ReactNativeFragment();
+    Bundle args = new BundleBuilder()
+        .putString(ReactNativeIntents.EXTRA_MODULE_NAME, moduleName)
+        .putBoolean(ReactNativeFragment.EXTRA_SHOW_TOOLBAR, true)
+        .putString(ReactNativeFragment.EXTRA_TOOLBAR_TITLE, toolbarTitle)
+        .putInt(ReactNativeFragment.EXTRA_TOOLBAR_PRIMARY_COLOR, toolbarPrimaryColor)
+        .putInt(ReactNativeFragment.EXTRA_TOOLBAR_SECONDARY_COLOR, toollbarSecondaryColor)
+        .putBundle(ReactNativeIntents.EXTRA_PROPS, props)
+        .toBundle();
+    frag.setArguments(args);
+    return frag;
+  }
+
   static ReactNativeFragment newInstance(Bundle intentExtras) {
     ReactNativeFragment frag = new ReactNativeFragment();
     frag.setArguments(intentExtras);
     return frag;
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    if (instanceId == null) {
-      if (savedInstanceState == null) {
-        String moduleName = getArguments().getString(ReactNativeIntents.EXTRA_MODULE_NAME);
-        instanceId = String.format(Locale.ENGLISH, "%1s_fragment_%2$d", moduleName, UUID++);
-      } else {
-        instanceId = savedInstanceState.getString(INSTANCE_ID_PROP);
-      }
-    }
-
-    setHasOptionsMenu(true);
-    Log.d(TAG, "onCreate");
-  }
-
-  @Override public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    Log.d(TAG, "onActivityCreated");
-    initReactNative();
   }
 
   private void initReactNative() {
@@ -140,7 +170,8 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       // anyway in 250ms. The handler should get canceled + called sooner though (it's za race).
       isWaitingForRenderToFinish = true;
       handler.postDelayed(new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
           Log.d(TAG, "render timeout callback called");
           startPostponedEnterTransition();
         }
@@ -179,55 +210,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
         ConversionUtil.EMPTY_MAP,
         renderedConfig,
         true
-    );
+                                                     );
 
     reactRootView.startReactApplication(reactInstanceManager, moduleName, props);
-  }
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    postponeEnterTransition();
-    View v = inflater.inflate(R.layout.fragment_react_native, container, false);
-    // TODO(lmr): should we make the "loading" XML configurable?
-    loadingView = v.findViewById(R.id.loading_view);
-    contentContainer = (ReactNativeFragmentViewGroup) v.findViewById(R.id.content_container);
-    contentContainer.setKeyListener(this);
-    activity = (AppCompatActivity) getActivity();
-
-    String moduleName = getArguments().getString(EXTRA_REACT_MODULE_NAME);
-    Log.d(TAG, "onCreateView " + moduleName);
-
-    initialConfig = reactNavigationCoordinator.getInitialConfigForModuleName(moduleName);
-    // for reconciliation, we save this in "renderedConfig" until the real one comes down
-    renderedConfig = initialConfig;
-
-    if (initialConfig.hasKey("screenColor")) {
-      int backgroundColor = initialConfig.getInt("screenColor");
-      // TODO(lmr): do we need to create a style for this?...
-      //        if (backgroundColor == Color.TRANSPARENT) {
-      //            // This needs to happen before setContentView gets called
-      //            setTheme(R.style.Theme_Airbnb_ReactTranslucent);
-      //        }
-    }
-
-    return v;
-  }
-
-  @Override
-  public void postponeEnterTransition() {
-    super.postponeEnterTransition();
-    Log.d(TAG, "postponeEnterTransition");
-    getActivity().supportPostponeEnterTransition();
-  }
-
-  @Override
-  public void startPostponedEnterTransition() {
-    super.startPostponedEnterTransition();
-    Log.d(TAG, "startPostponeEnterTransition");
-    if (getActivity() != null) {
-      getActivity().supportStartPostponedEnterTransition();
-    }
   }
 
   @Override
@@ -237,8 +222,12 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   }
 
   @Override
-  public void onSaveInstanceState(Bundle outState) {
-    outState.putString(INSTANCE_ID_PROP, instanceId);
+  public void onRequestPermissionsResult(
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (permissionListener != null &&
+        permissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+      permissionListener = null;
+    }
   }
 
   @Override
@@ -266,9 +255,76 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   }
 
   @Override
-  public void onPause() {
-    super.onPause();
-    emitEvent(ON_DISAPPEAR, null);
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (instanceId == null) {
+      if (savedInstanceState == null) {
+        String moduleName = getArguments().getString(ReactNativeIntents.EXTRA_MODULE_NAME);
+        instanceId = String.format(Locale.ENGLISH, "%1s_fragment_%2$d", moduleName, UUID++);
+      } else {
+        instanceId = savedInstanceState.getString(INSTANCE_ID_PROP);
+      }
+    }
+
+    setHasOptionsMenu(true);
+    Log.d(TAG, "onCreate");
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    postponeEnterTransition();
+    View v = inflater.inflate(R.layout.fragment_react_native, container, false);
+
+    if (getArguments().getBoolean(EXTRA_SHOW_TOOLBAR)) {
+      final int primary = getArguments().getInt(EXTRA_TOOLBAR_PRIMARY_COLOR, Color.WHITE);
+      final int secondary = getArguments().getInt(EXTRA_TOOLBAR_SECONDARY_COLOR, Color.BLACK);
+      final Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      toolbar.setTitle("Title");
+      toolbar.setBackgroundColor(primary);
+      toolbar.setTitleTextColor(secondary);
+      final Drawable backIcon = getResources().getDrawable(R.drawable.n2_ic_arrow_back);
+      backIcon.setColorFilter(secondary, PorterDuff.Mode.SRC_IN);
+      toolbar.setNavigationIcon(backIcon);
+      toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          getActivity().onBackPressed();
+        }
+      });
+    }
+
+    // TODO(lmr): should we make the "loading" XML configurable?
+    loadingView = v.findViewById(R.id.loading_view);
+    contentContainer = (ReactNativeFragmentViewGroup) v.findViewById(R.id.content_container);
+    contentContainer.setKeyListener(this);
+    activity = (AppCompatActivity) getActivity();
+
+    String moduleName = getArguments().getString(EXTRA_REACT_MODULE_NAME);
+    Log.d(TAG, "onCreateView " + moduleName);
+
+    initialConfig = reactNavigationCoordinator.getInitialConfigForModuleName(moduleName);
+    // for reconciliation, we save this in "renderedConfig" until the real one comes down
+    renderedConfig = initialConfig;
+
+    if (initialConfig.hasKey("screenColor")) {
+      int backgroundColor = initialConfig.getInt("screenColor");
+      // TODO(lmr): do we need to create a style for this?...
+      //        if (backgroundColor == Color.TRANSPARENT) {
+      //            // This needs to happen before setContentView gets called
+      //            setTheme(R.style.Theme_Airbnb_ReactTranslucent);
+      //        }
+    }
+
+    return v;
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    Log.d(TAG, "onActivityCreated");
+    initReactNative();
   }
 
   @Override
@@ -278,10 +334,38 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     emitEvent(ON_APPEAR, null);
   }
 
-  @Override public void onDestroyView() {
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    outState.putString(INSTANCE_ID_PROP, instanceId);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    emitEvent(ON_DISAPPEAR, null);
+  }
+
+  @Override
+  public void onDestroyView() {
     Log.d(TAG, "onDestroyView");
     super.onDestroyView();
     reactNavigationCoordinator.unregisterComponent(instanceId);
+  }
+
+  @Override
+  public void postponeEnterTransition() {
+    super.postponeEnterTransition();
+    Log.d(TAG, "postponeEnterTransition");
+    getActivity().supportPostponeEnterTransition();
+  }
+
+  @Override
+  public void startPostponedEnterTransition() {
+    super.startPostponedEnterTransition();
+    Log.d(TAG, "startPostponeEnterTransition");
+    if (getActivity() != null) {
+      getActivity().supportStartPostponedEnterTransition();
+    }
   }
 
   @Override
@@ -309,27 +393,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   }
 
   @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (permissionListener != null &&
-        permissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-      permissionListener = null;
-    }
-  }
-
-  @Override
-  public boolean isDismissible() {
-    return reactNavigationCoordinator.getDismissCloseBehavior(this);
-  }
-
-  public void dismiss() {
-    Intent intent = new Intent()
-        .putExtra(EXTRA_IS_DISMISS, isDismissible());
-    getActivity().setResult(Activity.RESULT_OK, intent);
-    getActivity().finish();
-  }
-
-  @Override
   public String getInstanceId() {
     return instanceId;
   }
@@ -337,6 +400,11 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   @Override
   public ReactRootView getReactRootView() {
     return reactRootView;
+  }
+
+  @Override
+  public boolean isDismissible() {
+    return reactNavigationCoordinator.getDismissCloseBehavior(this);
   }
 
   @Override
@@ -354,19 +422,12 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       // This is effectively debouncing the call.
       handler.removeCallbacksAndMessages(timeoutCallback);
       handler.post(new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
           signalFirstRenderComplete();
         }
       });
     }
-  }
-
-  private boolean isSuccessfullyInitialized() {
-    return reactNavigationCoordinator.isSuccessfullyInitialized();
-  }
-
-  private NavigationImplementation getImplementation() {
-    return reactNavigationCoordinator.getImplementation();
   }
 
   public void emitEvent(String eventName, Object object) {
@@ -377,20 +438,35 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     }
   }
 
+  @Override
+  public void receiveNavigationProperties(ReadableMap properties) {
+    this.previousConfig = this.renderedConfig;
+    this.renderedConfig = ConversionUtil.combine(this.initialConfig, properties);
+    reconcileNavigationProperties();
+  }
+
+  public void dismiss() {
+    Intent intent = new Intent()
+        .putExtra(EXTRA_IS_DISMISS, isDismissible());
+    getActivity().setResult(Activity.RESULT_OK, intent);
+    getActivity().finish();
+  }
+
+  private boolean isSuccessfullyInitialized() {
+    return reactNavigationCoordinator.isSuccessfullyInitialized();
+  }
+
+  private NavigationImplementation getImplementation() {
+    return reactNavigationCoordinator.getImplementation();
+  }
+
   private void reconcileNavigationProperties() {
     getImplementation().reconcileNavigationProperties(
         this,
         this.previousConfig,
         this.renderedConfig,
         false
-    );
-  }
-
-  @Override
-  public void receiveNavigationProperties(ReadableMap properties) {
-    this.previousConfig = this.renderedConfig;
-    this.renderedConfig = ConversionUtil.combine(this.initialConfig, properties);
-    reconcileNavigationProperties();
+                                                     );
   }
 
   @TargetApi(Build.VERSION_CODES.M)
