@@ -7,7 +7,8 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <com.airbnb.android.react.navigation.ReactNativeFragmentViewGroup
         android:id="@+id/content_container"
@@ -34,5 +35,6 @@
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_below="@+id/toolbar"
-        android:background="@drawable/toolbar_dropshadow" />
+        android:background="@drawable/toolbar_dropshadow"
+        android:visibility="gone" />
 </RelativeLayout>
