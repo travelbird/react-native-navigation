@@ -24,11 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewStub;
+import android.view.*;
 import android.view.animation.Animation;
 
 import java.util.Locale;
@@ -271,6 +267,11 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   }
 
   @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     postponeEnterTransition();
@@ -282,8 +283,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       final Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
       toolbar.setVisibility(View.VISIBLE);
       v.findViewById(R.id.toolbar_shadow).setVisibility(View.VISIBLE);
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      getActivity().setTitle(getArguments().getString(EXTRA_TOOLBAR_TITLE));
+      toolbar.setTitle(getArguments().getString(EXTRA_TOOLBAR_TITLE));
       toolbar.setBackgroundColor(primary);
       toolbar.setTitleTextColor(secondary);
       final Drawable backIcon = getResources().getDrawable(R.drawable.n2_ic_arrow_back);
