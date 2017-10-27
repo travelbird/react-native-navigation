@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.airbnb.android.react.navigation.ReactNativeFragmentViewGroup android:id="@+id/content_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+    <com.airbnb.android.react.navigation.ReactNativeFragmentViewGroup
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
 
         <ViewStub
             android:id="@+id/react_root_view_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
             android:layout="@layout/react_root_view" />
-
-        <View
-            android:id="@+id/toolbar_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_below="@+id/toolbar"
-            android:background="@drawable/toolbar_dropshadow"
-            android:visibility="gone" />
 
         <View
             android:id="@+id/loading_view"
             android:layout_width="42dp"
             android:layout_height="18dp"
             android:layout_gravity="center" />
-    </RelativeLayout>
 
+    </com.airbnb.android.react.navigation.ReactNativeFragmentViewGroup>
 
-</com.airbnb.android.react.navigation.ReactNativeFragmentViewGroup>
+    <View
+        android:id="@+id/toolbar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/toolbar_dropshadow" />
+</RelativeLayout>
