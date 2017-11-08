@@ -6,6 +6,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
 
 import android.annotation.TargetApi;
@@ -49,6 +50,8 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   static final String EXTRA_TOOLBAR_SECONDARY_COLOR = "TOOLBAR_SECONDARY_COLOR";
 
+  static final String EXTRA_RECREATE_REACT_CONTEXT = "recereateNativeContext";
+
   private static final String TAG = ReactNativeFragment.class.getSimpleName();
 
   private static final String ON_DISAPPEAR = "onDisappear";
@@ -80,11 +83,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
 
-  private ReactNavigationCoordinator reactNavigationCoordinator =
-      ReactNavigationCoordinator.sharedInstance;
+  private ReactNavigationCoordinator reactNavigationCoordinator = ReactNavigationCoordinator.sharedInstance;
 
-  private ReactInstanceManager reactInstanceManager =
-      reactNavigationCoordinator.getReactInstanceManager();
+  private ReactInstanceManager reactInstanceManager = reactNavigationCoordinator.getReactInstanceManager();
 
   private String instanceId;
 
@@ -118,19 +119,49 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     return frag;
   }
 
-  static ReactNativeFragment newInstance(String moduleName, @Nullable Bundle props, String toolbarTitle, int toolbarPrimaryColor,
-      int toollbarSecondaryColor) {
+  /**
+   * Create a ReactNativeFragment instance that loads the specified react native component.
+   *
+   * @param moduleName
+   *        The name of the js module
+   * @param props
+   *        The initial props
+   * @param toolbarTitle
+   *        The toolbar title
+   * @param toolbarPrimaryColor
+   *        The toolbar primary color (background)
+   * @param toollbarSecondaryColor
+   *        The toolbar secondary color (text and menu items)
+   * @param recreateContextOnClose
+   *        If true, the react context will be recreated and the javascript props will be cleared.
+   * @return
+   */
+  static ReactNativeFragment newInstance(
+      String moduleName, @Nullable Bundle props,
+      String toolbarTitle,
+      int toolbarPrimaryColor,
+      int toollbarSecondaryColor,
+      boolean recreateContextOnClose) {
     ReactNativeFragment frag = new ReactNativeFragment();
     Bundle args = new BundleBuilder()
         .putString(ReactNativeIntents.EXTRA_MODULE_NAME, moduleName)
-        .putBoolean(ReactNativeFragment.EXTRA_SHOW_TOOLBAR, true)
-        .putString(ReactNativeFragment.EXTRA_TOOLBAR_TITLE, toolbarTitle)
-        .putInt(ReactNativeFragment.EXTRA_TOOLBAR_PRIMARY_COLOR, toolbarPrimaryColor)
-        .putInt(ReactNativeFragment.EXTRA_TOOLBAR_SECONDARY_COLOR, toollbarSecondaryColor)
+        .putBoolean(EXTRA_SHOW_TOOLBAR, true)
+        .putString(EXTRA_TOOLBAR_TITLE, toolbarTitle)
+        .putInt(EXTRA_TOOLBAR_PRIMARY_COLOR, toolbarPrimaryColor)
+        .putInt(EXTRA_TOOLBAR_SECONDARY_COLOR, toollbarSecondaryColor)
         .putBundle(ReactNativeIntents.EXTRA_PROPS, props)
+        .putBoolean(EXTRA_RECREATE_REACT_CONTEXT, recreateContextOnClose)
         .toBundle();
     frag.setArguments(args);
     return frag;
+  }
+
+  static ReactNativeFragment newInstance(
+      String moduleName, @Nullable Bundle props,
+      String toolbarTitle,
+      int toolbarPrimaryColor,
+      int toollbarSecondaryColor) {
+    return newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toollbarSecondaryColor, false);
   }
 
   static ReactNativeFragment newInstance(Bundle intentExtras) {
@@ -214,7 +245,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    //    activityManager.onActivityResult(requestCode, resultCode, data);
+    reactInstanceManager.onActivityResult(getActivity(), requestCode, resultCode, data);
   }
 
   @Override
@@ -267,11 +298,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   }
 
   @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     postponeEnterTransition();
@@ -292,7 +318,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          getActivity().onBackPressed();
+          reactInstanceManager.onBackPressed();
         }
       });
     }
@@ -349,9 +375,17 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   @Override
   public void onDestroyView() {
+    if (getArguments().getBoolean(EXTRA_RECREATE_REACT_CONTEXT)) {
+      reactInstanceManager.recreateReactContextInBackground();
+    }
     Log.d(TAG, "onDestroyView");
     super.onDestroyView();
     reactNavigationCoordinator.unregisterComponent(instanceId);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
@@ -467,8 +501,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
         this,
         this.previousConfig,
         this.renderedConfig,
-        false
-                                                     );
+        false);
   }
 
   @TargetApi(Build.VERSION_CODES.M)
