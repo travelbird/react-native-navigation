@@ -6,7 +6,6 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
-import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
 
 import android.annotation.TargetApi;
@@ -123,18 +122,17 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
    * Create a ReactNativeFragment instance that loads the specified react native component.
    *
    * @param moduleName
-   *        The name of the js module
+   *     The name of the js module
    * @param props
-   *        The initial props
+   *     The initial props
    * @param toolbarTitle
-   *        The toolbar title
+   *     The toolbar title
    * @param toolbarPrimaryColor
-   *        The toolbar primary color (background)
+   *     The toolbar primary color (background)
    * @param toollbarSecondaryColor
-   *        The toolbar secondary color (text and menu items)
+   *     The toolbar secondary color (text and menu items)
    * @param recreateContextOnClose
-   *        If true, the react context will be recreated and the javascript props will be cleared.
-   * @return
+   *     If true, the react context will be recreated and the javascript props will be cleared.
    */
   static ReactNativeFragment newInstance(
       String moduleName, @Nullable Bundle props,
