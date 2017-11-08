@@ -129,7 +129,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
    *     The toolbar title
    * @param toolbarPrimaryColor
    *     The toolbar primary color (background)
-   * @param toollbarSecondaryColor
+   * @param toolbarSecondaryColor
    *     The toolbar secondary color (text and menu items)
    * @param recreateContextOnClose
    *     If true, the react context will be recreated and the javascript props will be cleared.
@@ -138,7 +138,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       String moduleName, @Nullable Bundle props,
       String toolbarTitle,
       int toolbarPrimaryColor,
-      int toollbarSecondaryColor,
+      int toolbarSecondaryColor,
       boolean recreateContextOnClose) {
     ReactNativeFragment frag = new ReactNativeFragment();
     Bundle args = new BundleBuilder()
@@ -146,7 +146,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
         .putBoolean(EXTRA_SHOW_TOOLBAR, true)
         .putString(EXTRA_TOOLBAR_TITLE, toolbarTitle)
         .putInt(EXTRA_TOOLBAR_PRIMARY_COLOR, toolbarPrimaryColor)
-        .putInt(EXTRA_TOOLBAR_SECONDARY_COLOR, toollbarSecondaryColor)
+        .putInt(EXTRA_TOOLBAR_SECONDARY_COLOR, toolbarSecondaryColor)
         .putBundle(ReactNativeIntents.EXTRA_PROPS, props)
         .putBoolean(EXTRA_RECREATE_REACT_CONTEXT, recreateContextOnClose)
         .toBundle();
@@ -158,8 +158,8 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       String moduleName, @Nullable Bundle props,
       String toolbarTitle,
       int toolbarPrimaryColor,
-      int toollbarSecondaryColor) {
-    return newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toollbarSecondaryColor, false);
+      int toolbarSecondaryColor) {
+    return newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor, false);
   }
 
   static ReactNativeFragment newInstance(Bundle intentExtras) {

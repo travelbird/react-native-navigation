@@ -1,5 +1,11 @@
 package com.airbnb.android.react.navigation;
 
+import com.airbnb.android.R;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.common.MapBuilder;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Color;
@@ -21,12 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
-import com.airbnb.android.R;
-import com.facebook.react.bridge.NativeModule;
-import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.common.MapBuilder;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -37,43 +37,30 @@ import static com.airbnb.android.react.navigation.ReactNativeIntents.EXTRA_CODE;
  * Owner of the navigation stack for a given Activity. There should be one per activity.
  */
 public class ScreenCoordinator {
-  private static final String TAG = ScreenCoordinator.class.getSimpleName();
-  private static final String TRANSITION_GROUP = "transitionGroup";
 
   static final String EXTRA_PAYLOAD = "payload";
 
-  enum PresentAnimation {
-    Modal(R.anim.slide_up, R.anim.delay, R.anim.delay, R.anim.slide_down),
-    Push(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left,
-        R.anim.slide_out_right),
-    Fade(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+  private static final String TAG = ScreenCoordinator.class.getSimpleName();
 
-    @AnimRes int enter;
-    @AnimRes int exit;
-    @AnimRes int popEnter;
-    @AnimRes int popExit;
-
-    PresentAnimation(int enter, int exit, int popEnter, int popExit) {
-      this.enter = enter;
-      this.exit = exit;
-      this.popEnter = popEnter;
-      this.popExit = popExit;
-    }
-  }
+  private static final String TRANSITION_GROUP = "transitionGroup";
 
   private final Stack<BackStack> backStacks = new Stack<>();
-  private final AppCompatActivity activity;
-  private final ScreenCoordinatorLayout container;
-  private ReactNavigationCoordinator reactNavigationCoordinator =
-      ReactNavigationCoordinator.sharedInstance;
 
-  private int stackId = 0;
+  private final AppCompatActivity activity;
+
+  private final ScreenCoordinatorLayout container;
 
   /**
    * Event listener to be access from the {@linkplain NativeModule} for JS -> Native event
    * propagation.
    */
-  @Nullable ReactEventListener reactEventListener;
+  @Nullable
+  ReactEventListener reactEventListener;
+
+  private ReactNavigationCoordinator reactNavigationCoordinator =
+      ReactNavigationCoordinator.sharedInstance;
+
+  private int stackId = 0;
 
   /**
    * When we dismiss a back stack, the fragment manager would normally execute the latest fragment's
@@ -81,7 +68,8 @@ public class ScreenCoordinator {
    * pop exit animation would be from when B was pushed, not from when A was presented.
    * We want the dismiss animation to be the popExit of the original present transaction.
    */
-  @AnimRes private int nextPopExitAnim;
+  @AnimRes
+  private int nextPopExitAnim;
 
   private Map<String, NativeScreenFactory> factories = new LinkedHashMap<>();
 
@@ -148,7 +136,7 @@ public class ScreenCoordinator {
 
   public void pushScreen(Fragment fragment, @Nullable Bundle options) {
     FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction()
-        .setAllowOptimization(true);
+                                     .setAllowOptimization(true);
     Fragment currentFragment = getCurrentFragment();
     if (currentFragment == null) {
       throw new IllegalStateException("There is no current fragment. You must present one first.");
@@ -201,6 +189,35 @@ public class ScreenCoordinator {
     presentScreen(fragment, PresentAnimation.Modal, promise);
   }
 
+  /**
+   * Create a ReactNativeFragment instance that loads the specified react native component.
+   *
+   * @param moduleName
+   *     The name of the js module
+   * @param props
+   *     The initial props
+   * @param toolbarTitle
+   *     The toolbar title
+   * @param toolbarPrimaryColor
+   *     The toolbar primary color (background)
+   * @param toolbarSecondaryColor
+   *     The toolbar secondary color (text and menu items)
+   * @param recreateContextOnClose
+   *     If true, the react context will be recreated and the javascript props will be cleared.
+   */
+  public void presentScreen(
+      String moduleName,
+      String toolbarTitle,
+      int toolbarPrimaryColor,
+      int toolbarSecondaryColor,
+      @Nullable Bundle props,
+      @Nullable Promise promise,
+      boolean recreateContextOnClose) {
+    Fragment fragment = ReactNativeFragment
+        .newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor, recreateContextOnClose);
+    presentScreen(fragment, PresentAnimation.Modal, promise);
+  }
+
   public void presentScreen(
       String moduleName,
       String toolbarTitle,
@@ -208,8 +225,7 @@ public class ScreenCoordinator {
       int toolbarSecondaryColor,
       @Nullable Bundle props,
       @Nullable Promise promise) {
-    Fragment fragment = ReactNativeFragment.newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor);
-    presentScreen(fragment, PresentAnimation.Modal, promise);
+    presentScreen(moduleName, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor, props, promise, false);
   }
 
   public void presentScreen(Fragment fragment) {
@@ -242,8 +258,8 @@ public class ScreenCoordinator {
     backStacks.push(bsi);
     // TODO: dry this up with pushScreen
     FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction()
-        .setAllowOptimization(true)
-        .setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit);
+                                     .setAllowOptimization(true)
+                                     .setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit);
 
     Fragment currentFragment = getCurrentFragment();
     if (currentFragment != null && !isFragmentTranslucent(fragment)) {
@@ -319,7 +335,7 @@ public class ScreenCoordinator {
     }
 
     activity.getSupportFragmentManager()
-        .popBackStackImmediate(bsi.getTag(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            .popBackStackImmediate(bsi.getTag(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
     Log.d(TAG, toString());
   }
 
@@ -368,5 +384,31 @@ public class ScreenCoordinator {
     }
     sb.append('}');
     return sb.toString();
+  }
+
+  enum PresentAnimation {
+    Modal(R.anim.slide_up, R.anim.delay, R.anim.delay, R.anim.slide_down),
+    Push(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left,
+         R.anim.slide_out_right),
+    Fade(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+
+    @AnimRes
+    int enter;
+
+    @AnimRes
+    int exit;
+
+    @AnimRes
+    int popEnter;
+
+    @AnimRes
+    int popExit;
+
+    PresentAnimation(int enter, int exit, int popEnter, int popExit) {
+      this.enter = enter;
+      this.exit = exit;
+      this.popEnter = popEnter;
+      this.popExit = popExit;
+    }
   }
 }
