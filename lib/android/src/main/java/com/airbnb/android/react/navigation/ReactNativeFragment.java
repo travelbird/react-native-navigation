@@ -316,7 +316,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          reactInstanceManager.onBackPressed();
+          activity.onBackPressed();
         }
       });
     }
