@@ -173,6 +173,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       return;
     }
     if (!isSuccessfullyInitialized()) {
+      reactInstanceManager.createReactContextInBackground();
       // TODO(lmr): need a different way of doing this
       // TODO(lmr): move to utils
       reactInstanceManager.addReactInstanceEventListener(
