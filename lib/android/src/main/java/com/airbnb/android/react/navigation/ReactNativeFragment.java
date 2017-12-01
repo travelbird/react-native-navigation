@@ -11,6 +11,7 @@ import com.facebook.react.modules.core.PermissionListener;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -283,6 +284,10 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    // We only support portrait for react native.
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
     if (instanceId == null) {
       if (savedInstanceState == null) {
         String moduleName = getArguments().getString(ReactNativeIntents.EXTRA_MODULE_NAME);
@@ -380,6 +385,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     Log.d(TAG, "onDestroyView");
     super.onDestroyView();
     reactNavigationCoordinator.unregisterComponent(instanceId);
+
+    // We are going out of the react native context. Let the activity decide the orientation
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
   }
 
   @Override
