@@ -184,7 +184,9 @@ public class ScreenCoordinator {
       @Nullable Bundle props,
       @Nullable Bundle options,
       @Nullable Promise promise) {
-    // TODO: use options
+    if (props != null && options != null) {
+      props.putAll(options);
+    }
     Fragment fragment = ReactNativeFragment.newInstance(moduleName, props);
     presentScreen(fragment, PresentAnimation.Modal, promise);
   }
