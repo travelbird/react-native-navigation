@@ -204,8 +204,6 @@ public class ScreenCoordinator {
    *     The toolbar primary color (background)
    * @param toolbarSecondaryColor
    *     The toolbar secondary color (text and menu items)
-   * @param recreateContextOnClose
-   *     If true, the react context will be recreated and the javascript props will be cleared.
    */
   public void presentScreen(
       String moduleName,
@@ -213,21 +211,14 @@ public class ScreenCoordinator {
       int toolbarPrimaryColor,
       int toolbarSecondaryColor,
       @Nullable Bundle props,
-      @Nullable Promise promise,
-      boolean recreateContextOnClose) {
-    Fragment fragment = ReactNativeFragment
-        .newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor, recreateContextOnClose);
-    presentScreen(fragment, PresentAnimation.Modal, promise);
-  }
-
-  public void presentScreen(
-      String moduleName,
-      String toolbarTitle,
-      int toolbarPrimaryColor,
-      int toolbarSecondaryColor,
-      @Nullable Bundle props,
+      @Nullable Bundle options,
       @Nullable Promise promise) {
-    presentScreen(moduleName, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor, props, promise, false);
+    if (props != null && options != null) {
+      props.putAll(options);
+    }
+    Fragment fragment = ReactNativeFragment
+        .newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor);
+    presentScreen(fragment, PresentAnimation.Modal, promise);
   }
 
   public void presentScreen(Fragment fragment) {
