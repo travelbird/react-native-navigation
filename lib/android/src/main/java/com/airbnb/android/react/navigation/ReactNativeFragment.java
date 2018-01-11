@@ -173,12 +173,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
     if (reactRootView != null || getView() == null) {
       return;
     }
-    if (!isSuccessfullyInitialized() || reactInstanceManager.getCurrentReactContext() == null) {
-      try {
-        reactInstanceManager.recreateReactContextInBackground();
-      } catch (AssertionError e) {
-        reactInstanceManager.createReactContextInBackground();
-      }
+    if (!isSuccessfullyInitialized()) {
+      reactInstanceManager.createReactContextInBackground();
+
       // TODO(lmr): need a different way of doing this
       // TODO(lmr): move to utils
       reactInstanceManager.addReactInstanceEventListener(
@@ -385,9 +382,6 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   @Override
   public void onDestroyView() {
-    //    if (getArguments().getBoolean(EXTRA_RECREATE_REACT_CONTEXT)) {
-    //      reactInstanceManager.recreateReactContextInBackground();
-    //    }
     Log.d(TAG, "onDestroyView");
     super.onDestroyView();
     reactNavigationCoordinator.unregisterComponent(instanceId);
