@@ -3,6 +3,7 @@ package com.airbnb.android.react.navigation;
 import com.airbnb.android.R;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
+import com.facebook.react.TBReactRootView;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
@@ -101,7 +102,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
   private ReactNativeFragmentViewGroup contentContainer;
 
-  private ReactRootView reactRootView;
+  private TBReactRootView reactRootView;
 
   private PermissionListener permissionListener;
 
@@ -132,15 +133,12 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
    *     The toolbar primary color (background)
    * @param toolbarSecondaryColor
    *     The toolbar secondary color (text and menu items)
-   * @param recreateContextOnClose
-   *     If true, the react context will be recreated and the javascript props will be cleared.
    */
   static ReactNativeFragment newInstance(
       String moduleName, @Nullable Bundle props,
       String toolbarTitle,
       int toolbarPrimaryColor,
-      int toolbarSecondaryColor,
-      boolean recreateContextOnClose) {
+      int toolbarSecondaryColor) {
     ReactNativeFragment frag = new ReactNativeFragment();
     Bundle args = new BundleBuilder()
         .putString(ReactNativeIntents.EXTRA_MODULE_NAME, moduleName)
@@ -149,18 +147,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
         .putInt(EXTRA_TOOLBAR_PRIMARY_COLOR, toolbarPrimaryColor)
         .putInt(EXTRA_TOOLBAR_SECONDARY_COLOR, toolbarSecondaryColor)
         .putBundle(ReactNativeIntents.EXTRA_PROPS, props)
-        .putBoolean(EXTRA_RECREATE_REACT_CONTEXT, recreateContextOnClose)
         .toBundle();
     frag.setArguments(args);
     return frag;
-  }
-
-  static ReactNativeFragment newInstance(
-      String moduleName, @Nullable Bundle props,
-      String toolbarTitle,
-      int toolbarPrimaryColor,
-      int toolbarSecondaryColor) {
-    return newInstance(moduleName, props, toolbarTitle, toolbarPrimaryColor, toolbarSecondaryColor, false);
   }
 
   static ReactNativeFragment newInstance(Bundle intentExtras) {
@@ -233,7 +222,7 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
 
     if (reactRootView == null) {
       ViewStub reactViewStub = (ViewStub) getView().findViewById(R.id.react_root_view_stub);
-      reactRootView = (ReactRootView) reactViewStub.inflate();
+      reactRootView = (TBReactRootView) reactViewStub.inflate();
     }
 
     getImplementation().reconcileNavigationProperties(
@@ -516,5 +505,9 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
       PermissionListener listener) {
     permissionListener = listener;
     requestPermissions(permissions, requestCode);
+  }
+
+  public void setAppProperties(Bundle bundle) {
+    reactRootView.setAppProperties(bundle);
   }
 }
