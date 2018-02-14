@@ -6,8 +6,6 @@
 //  Copyright © 2016 Airbnb. All rights reserved.
 //
 
-import React
-
 private let VERSION: Int = 2
 
 @objc(ReactNavigation)

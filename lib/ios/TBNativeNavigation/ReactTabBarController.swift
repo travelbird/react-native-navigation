@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import React
 
 open class ReactTabBarController: UITabBarController {
 

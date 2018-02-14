@@ -1,0 +1,384 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4DEED44F20346776001D2345 /* TBNativeNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43520346774001D2345 /* TBNativeNavigation.m */; };
+		4DEED45020346776001D2345 /* TransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43620346774001D2345 /* TransitionAnimation.swift */; };
+		4DEED45120346776001D2345 /* ReactSharedElementTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43720346774001D2345 /* ReactSharedElementTransition.swift */; };
+		4DEED45220346776001D2345 /* TabViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43820346774001D2345 /* TabViewManager.swift */; };
+		4DEED45320346776001D2345 /* UIView+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43920346775001D2345 /* UIView+Snapshot.swift */; };
+		4DEED45420346776001D2345 /* ReactNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43A20346775001D2345 /* ReactNavigation.swift */; };
+		4DEED45520346776001D2345 /* NativeNavigationBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43C20346775001D2345 /* NativeNavigationBridge.m */; };
+		4DEED45620346776001D2345 /* UIBarButtonItem+addAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43D20346775001D2345 /* UIBarButtonItem+addAction.swift */; };
+		4DEED45720346776001D2345 /* SharedElementGroupManagerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43E20346775001D2345 /* SharedElementGroupManagerBridge.m */; };
+		4DEED45820346776001D2345 /* ReactNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED43F20346775001D2345 /* ReactNavigationCoordinator.swift */; };
+		4DEED45920346776001D2345 /* SharedElementManagerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44020346775001D2345 /* SharedElementManagerBridge.m */; };
+		4DEED45A20346776001D2345 /* Dictionary+FunctionalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44120346775001D2345 /* Dictionary+FunctionalExtensions.swift */; };
+		4DEED45B20346776001D2345 /* UIViewController+TopMostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44220346775001D2345 /* UIViewController+TopMostViewController.swift */; };
+		4DEED45C20346776001D2345 /* ReactNavigationImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44320346775001D2345 /* ReactNavigationImplementation.swift */; };
+		4DEED45D20346776001D2345 /* SharedElementGroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44420346775001D2345 /* SharedElementGroupManager.swift */; };
+		4DEED45E20346776001D2345 /* ReactViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44520346775001D2345 /* ReactViewControllerProtocol.swift */; };
+		4DEED45F20346776001D2345 /* TabViewMangerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44620346775001D2345 /* TabViewMangerBridge.m */; };
+		4DEED46020346776001D2345 /* ReactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44720346775001D2345 /* ReactViewController.swift */; };
+		4DEED46120346776001D2345 /* ReactTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44820346776001D2345 /* ReactTabBarController.swift */; };
+		4DEED46220346776001D2345 /* ReactEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44920346776001D2345 /* ReactEventListener.swift */; };
+		4DEED46320346776001D2345 /* ReactSharedElementAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44A20346776001D2345 /* ReactSharedElementAnimation.swift */; };
+		4DEED46420346776001D2345 /* TabBarViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44B20346776001D2345 /* TabBarViewManager.swift */; };
+		4DEED46520346776001D2345 /* TabBarViewManagerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44C20346776001D2345 /* TabBarViewManagerBridge.m */; };
+		4DEED46620346776001D2345 /* SharedElementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44D20346776001D2345 /* SharedElementManager.swift */; };
+		4DEED46720346776001D2345 /* SharedElementTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEED44E20346776001D2345 /* SharedElementTransitionController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4DAC3646203466A300BF83E8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4DAC3648203466A300BF83E8 /* libTBNativeNavigation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libTBNativeNavigation.a; path = "/Users/Mark/Dev/React-Native/react-native-navigation/lib/ios/build/Debug-iphoneos/libTBNativeNavigation.a"; sourceTree = "<absolute>"; };
+		4DEED43420346774001D2345 /* TBNativeNavigation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBNativeNavigation-Bridging-Header.h"; sourceTree = "<group>"; };
+		4DEED43520346774001D2345 /* TBNativeNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBNativeNavigation.m; sourceTree = "<group>"; };
+		4DEED43620346774001D2345 /* TransitionAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimation.swift; sourceTree = "<group>"; };
+		4DEED43720346774001D2345 /* ReactSharedElementTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactSharedElementTransition.swift; sourceTree = "<group>"; };
+		4DEED43820346774001D2345 /* TabViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewManager.swift; sourceTree = "<group>"; };
+		4DEED43920346775001D2345 /* UIView+Snapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Snapshot.swift"; sourceTree = "<group>"; };
+		4DEED43A20346775001D2345 /* ReactNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactNavigation.swift; sourceTree = "<group>"; };
+		4DEED43B20346775001D2345 /* TBNativeNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBNativeNavigation.h; sourceTree = "<group>"; };
+		4DEED43C20346775001D2345 /* NativeNavigationBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeNavigationBridge.m; sourceTree = "<group>"; };
+		4DEED43D20346775001D2345 /* UIBarButtonItem+addAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+addAction.swift"; sourceTree = "<group>"; };
+		4DEED43E20346775001D2345 /* SharedElementGroupManagerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedElementGroupManagerBridge.m; sourceTree = "<group>"; };
+		4DEED43F20346775001D2345 /* ReactNavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactNavigationCoordinator.swift; sourceTree = "<group>"; };
+		4DEED44020346775001D2345 /* SharedElementManagerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedElementManagerBridge.m; sourceTree = "<group>"; };
+		4DEED44120346775001D2345 /* Dictionary+FunctionalExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+FunctionalExtensions.swift"; sourceTree = "<group>"; };
+		4DEED44220346775001D2345 /* UIViewController+TopMostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+TopMostViewController.swift"; sourceTree = "<group>"; };
+		4DEED44320346775001D2345 /* ReactNavigationImplementation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactNavigationImplementation.swift; sourceTree = "<group>"; };
+		4DEED44420346775001D2345 /* SharedElementGroupManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedElementGroupManager.swift; sourceTree = "<group>"; };
+		4DEED44520346775001D2345 /* ReactViewControllerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactViewControllerProtocol.swift; sourceTree = "<group>"; };
+		4DEED44620346775001D2345 /* TabViewMangerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabViewMangerBridge.m; sourceTree = "<group>"; };
+		4DEED44720346775001D2345 /* ReactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactViewController.swift; sourceTree = "<group>"; };
+		4DEED44820346776001D2345 /* ReactTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactTabBarController.swift; sourceTree = "<group>"; };
+		4DEED44920346776001D2345 /* ReactEventListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactEventListener.swift; sourceTree = "<group>"; };
+		4DEED44A20346776001D2345 /* ReactSharedElementAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactSharedElementAnimation.swift; sourceTree = "<group>"; };
+		4DEED44B20346776001D2345 /* TabBarViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewManager.swift; sourceTree = "<group>"; };
+		4DEED44C20346776001D2345 /* TabBarViewManagerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarViewManagerBridge.m; sourceTree = "<group>"; };
+		4DEED44D20346776001D2345 /* SharedElementManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedElementManager.swift; sourceTree = "<group>"; };
+		4DEED44E20346776001D2345 /* SharedElementTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedElementTransitionController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4DAC3645203466A300BF83E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4DAC363F203466A300BF83E8 = {
+			isa = PBXGroup;
+			children = (
+				4DAC364A203466A300BF83E8 /* TBNativeNavigation */,
+			);
+			sourceTree = "<group>";
+		};
+		4DAC364A203466A300BF83E8 /* TBNativeNavigation */ = {
+			isa = PBXGroup;
+			children = (
+				4DEED43B20346775001D2345 /* TBNativeNavigation.h */,
+				4DEED43520346774001D2345 /* TBNativeNavigation.m */,
+				4DEED43420346774001D2345 /* TBNativeNavigation-Bridging-Header.h */,
+				4DEED44120346775001D2345 /* Dictionary+FunctionalExtensions.swift */,
+				4DEED43C20346775001D2345 /* NativeNavigationBridge.m */,
+				4DEED44920346776001D2345 /* ReactEventListener.swift */,
+				4DEED43A20346775001D2345 /* ReactNavigation.swift */,
+				4DEED43F20346775001D2345 /* ReactNavigationCoordinator.swift */,
+				4DEED44320346775001D2345 /* ReactNavigationImplementation.swift */,
+				4DEED44A20346776001D2345 /* ReactSharedElementAnimation.swift */,
+				4DEED43720346774001D2345 /* ReactSharedElementTransition.swift */,
+				4DEED44820346776001D2345 /* ReactTabBarController.swift */,
+				4DEED44720346775001D2345 /* ReactViewController.swift */,
+				4DEED44520346775001D2345 /* ReactViewControllerProtocol.swift */,
+				4DEED44420346775001D2345 /* SharedElementGroupManager.swift */,
+				4DEED43E20346775001D2345 /* SharedElementGroupManagerBridge.m */,
+				4DEED44D20346776001D2345 /* SharedElementManager.swift */,
+				4DEED44020346775001D2345 /* SharedElementManagerBridge.m */,
+				4DEED44E20346776001D2345 /* SharedElementTransitionController.swift */,
+				4DEED44B20346776001D2345 /* TabBarViewManager.swift */,
+				4DEED44C20346776001D2345 /* TabBarViewManagerBridge.m */,
+				4DEED43820346774001D2345 /* TabViewManager.swift */,
+				4DEED44620346775001D2345 /* TabViewMangerBridge.m */,
+				4DEED43620346774001D2345 /* TransitionAnimation.swift */,
+				4DEED43D20346775001D2345 /* UIBarButtonItem+addAction.swift */,
+				4DEED43920346775001D2345 /* UIView+Snapshot.swift */,
+				4DEED44220346775001D2345 /* UIViewController+TopMostViewController.swift */,
+			);
+			path = TBNativeNavigation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4DAC3647203466A300BF83E8 /* TBNativeNavigation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4DAC3651203466A300BF83E8 /* Build configuration list for PBXNativeTarget "TBNativeNavigation" */;
+			buildPhases = (
+				4DAC3644203466A300BF83E8 /* Sources */,
+				4DAC3645203466A300BF83E8 /* Frameworks */,
+				4DAC3646203466A300BF83E8 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TBNativeNavigation;
+			productName = TBNativeNavigation;
+			productReference = 4DAC3648203466A300BF83E8 /* libTBNativeNavigation.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4DAC3640203466A300BF83E8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = TravelBird;
+				TargetAttributes = {
+					4DAC3647203466A300BF83E8 = {
+						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0920;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4DAC3643203466A300BF83E8 /* Build configuration list for PBXProject "TBNativeNavigation" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4DAC363F203466A300BF83E8;
+			productRefGroup = 4DAC363F203466A300BF83E8;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4DAC3647203466A300BF83E8 /* TBNativeNavigation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4DAC3644203466A300BF83E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4DEED45B20346776001D2345 /* UIViewController+TopMostViewController.swift in Sources */,
+				4DEED45A20346776001D2345 /* Dictionary+FunctionalExtensions.swift in Sources */,
+				4DEED45820346776001D2345 /* ReactNavigationCoordinator.swift in Sources */,
+				4DEED45220346776001D2345 /* TabViewManager.swift in Sources */,
+				4DEED45E20346776001D2345 /* ReactViewControllerProtocol.swift in Sources */,
+				4DEED44F20346776001D2345 /* TBNativeNavigation.m in Sources */,
+				4DEED45720346776001D2345 /* SharedElementGroupManagerBridge.m in Sources */,
+				4DEED46320346776001D2345 /* ReactSharedElementAnimation.swift in Sources */,
+				4DEED45620346776001D2345 /* UIBarButtonItem+addAction.swift in Sources */,
+				4DEED46020346776001D2345 /* ReactViewController.swift in Sources */,
+				4DEED46420346776001D2345 /* TabBarViewManager.swift in Sources */,
+				4DEED45920346776001D2345 /* SharedElementManagerBridge.m in Sources */,
+				4DEED46220346776001D2345 /* ReactEventListener.swift in Sources */,
+				4DEED46520346776001D2345 /* TabBarViewManagerBridge.m in Sources */,
+				4DEED45120346776001D2345 /* ReactSharedElementTransition.swift in Sources */,
+				4DEED45C20346776001D2345 /* ReactNavigationImplementation.swift in Sources */,
+				4DEED45420346776001D2345 /* ReactNavigation.swift in Sources */,
+				4DEED46620346776001D2345 /* SharedElementManager.swift in Sources */,
+				4DEED46720346776001D2345 /* SharedElementTransitionController.swift in Sources */,
+				4DEED45320346776001D2345 /* UIView+Snapshot.swift in Sources */,
+				4DEED45D20346776001D2345 /* SharedElementGroupManager.swift in Sources */,
+				4DEED46120346776001D2345 /* ReactTabBarController.swift in Sources */,
+				4DEED45020346776001D2345 /* TransitionAnimation.swift in Sources */,
+				4DEED45520346776001D2345 /* NativeNavigationBridge.m in Sources */,
+				4DEED45F20346776001D2345 /* TabViewMangerBridge.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4DAC364F203466A300BF83E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4DAC3650203466A300BF83E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4DAC3652203466A300BF83E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P36Y9AVLN7;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "TBNativeNavigation/TBNativeNavigation-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4DAC3653203466A300BF83E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P36Y9AVLN7;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "TBNativeNavigation/TBNativeNavigation-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4DAC3643203466A300BF83E8 /* Build configuration list for PBXProject "TBNativeNavigation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4DAC364F203466A300BF83E8 /* Debug */,
+				4DAC3650203466A300BF83E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4DAC3651203466A300BF83E8 /* Build configuration list for PBXNativeTarget "TBNativeNavigation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4DAC3652203466A300BF83E8 /* Debug */,
+				4DAC3653203466A300BF83E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4DAC3640203466A300BF83E8 /* Project object */;
+}

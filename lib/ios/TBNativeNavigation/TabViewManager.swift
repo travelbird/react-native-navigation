@@ -6,8 +6,6 @@
 //  Copyright © 2016 Airbnb. All rights reserved.
 //
 
-import React
-
 // MARK: - TabView
 
 final class TabView: UIView {
@@ -81,7 +79,7 @@ final class TabViewManager: RCTViewManager {
 //    return TabView(implementation: ReactNavigationCoordinator.sharedInstance.navigation)
   }
 
-  override func constantsToExport() -> [String: Any] {
+  override func constantsToExport() -> [AnyHashable: Any] {
     return [
       "VERSION": VERSION
     ]

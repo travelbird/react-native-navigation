@@ -6,8 +6,6 @@
 //  Copyright © 2016 Airbnb. All rights reserved.
 //
 
-import React
-
 // MARK: - SharedElementGroup
 
 final class SharedElementGroup: RCTView {
@@ -46,7 +44,7 @@ final class SharedElementGroupManager: RCTViewManager {
     return SharedElementGroup()
   }
 
-  override func constantsToExport() -> [String: Any] {
+  override func constantsToExport() -> [AnyHashable: Any] {
     return [
       "VERSION": VERSION
     ]

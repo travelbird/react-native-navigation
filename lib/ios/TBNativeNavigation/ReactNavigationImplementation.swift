@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import React
 
 
 @objc public protocol ReactNavigationImplementation: class {

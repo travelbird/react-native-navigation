@@ -6,8 +6,6 @@
 //  Copyright © 2016 Airbnb. All rights reserved.
 //
 
-import React
-
 final class TabBar: RCTView {
 
   // MARK: Internal
@@ -45,7 +43,7 @@ final class TabBarViewManager: RCTViewManager {
     return TabBar()
   }
 
-  override func constantsToExport() -> [String: Any] {
+  override func constantsToExport() -> [AnyHashable: Any] {
     return [
       "VERSION": VERSION
     ]
