@@ -510,4 +510,8 @@ public class ReactNativeFragment extends Fragment implements ReactInterface,
   public void setAppProperties(Bundle bundle) {
     reactRootView.setAppProperties(bundle);
   }
+
+  public void reloadReactContainer() {
+    reactInstanceManager.recreateReactContextInBackground();
+  }
 }
