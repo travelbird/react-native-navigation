@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,13 +39,18 @@ import java.util.List;
  * This ViewGroup looks at the back stack size when a view is added and reverses the drawing order
  * if the back stack grew since the last view was added.
  */
-public class ScreenCoordinatorLayout extends FrameLayout {
+public class ScreenCoordinatorLayout extends FitsSystemWindowsFrameLayout {
+
   private final List<DrawingOp> drawingOpPool = new ArrayList<>();
+
   private final List<DrawingOp> drawingOps = new ArrayList<>();
 
   private FragmentManager fragmentManager;
+
   private boolean reverseLastTwoChildren = false;
+
   private boolean isDetachingCurrentScreen = false;
+
   private int previousChildrenCount = 0;
 
   public ScreenCoordinatorLayout(@NonNull Context context) {
@@ -69,16 +73,6 @@ public class ScreenCoordinatorLayout extends FrameLayout {
     isDetachingCurrentScreen = true;
   }
 
-  @Override
-  public void removeView(final View view) {
-    if (isDetachingCurrentScreen) {
-      isDetachingCurrentScreen = false;
-      reverseLastTwoChildren = true;
-    }
-
-    super.removeView(view);
-  }
-
   private void drawAndRelease(int index) {
     DrawingOp op = drawingOps.remove(index);
     op.draw();
@@ -89,14 +83,14 @@ public class ScreenCoordinatorLayout extends FrameLayout {
   protected void dispatchDraw(Canvas canvas) {
     super.dispatchDraw(canvas);
 
-	// check the view removal is completed (by comparing the previous children count)
+    // check the view removal is completed (by comparing the previous children count)
     if (drawingOps.size() < previousChildrenCount) {
       reverseLastTwoChildren = false;
     }
     previousChildrenCount = drawingOps.size();
 
     if (reverseLastTwoChildren && drawingOps.size() >= 2) {
-	  Collections.swap(drawingOps, drawingOps.size() - 1, drawingOps.size() - 2);
+      Collections.swap(drawingOps, drawingOps.size() - 1, drawingOps.size() - 2);
     }
 
     while (!drawingOps.isEmpty()) {
@@ -108,6 +102,16 @@ public class ScreenCoordinatorLayout extends FrameLayout {
   protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
     drawingOps.add(obtainDrawingOp().set(canvas, child, drawingTime));
     return true;
+  }
+
+  @Override
+  public void removeView(final View view) {
+    if (isDetachingCurrentScreen) {
+      isDetachingCurrentScreen = false;
+      reverseLastTwoChildren = true;
+    }
+
+    super.removeView(view);
   }
 
   private void performDraw(DrawingOp op) {
@@ -122,8 +126,11 @@ public class ScreenCoordinatorLayout extends FrameLayout {
   }
 
   private final class DrawingOp {
+
     private Canvas canvas;
+
     private View child;
+
     private long drawingTime;
 
     DrawingOp set(Canvas canvas, View child, long drawingTime) {
