@@ -311,11 +311,14 @@ public class ScreenCoordinator {
   }
 
   private void dismiss(int resultCode, Map<String, Object> payload, boolean finishIfEmpty) {
-    BackStack bsi = backStacks.pop();
-    Promise promise = bsi.getPromise();
-    deliverPromise(promise, resultCode, payload);
-    // This is needed so we can override the pop exit animation to slide down.
-    PresentAnimation anim = bsi.getAnimation();
+
+    if (!backStacks.isEmpty()) {
+      BackStack bsi = backStacks.pop();
+      Promise promise = bsi.getPromise();
+      deliverPromise(promise, resultCode, payload);
+      // This is needed so we can override the pop exit animation to slide down.
+      PresentAnimation anim = bsi.getAnimation();
+    }
 
     if (backStacks.isEmpty()) {
       if (finishIfEmpty) {
