@@ -20,7 +20,7 @@ def libraries = [
         'design'     : "com.android.support:design:${versions.androidSupport}",
     ],
 
-    'reactNative': 'com.facebook.react:react-native:0.42.3',
+    'reactNative': 'com.facebook.react:react-native:0.52.0',
 
     'rodo'       : [
         'core' : "com.travelbird.rodo:rodo-core:${versions.rodo}",

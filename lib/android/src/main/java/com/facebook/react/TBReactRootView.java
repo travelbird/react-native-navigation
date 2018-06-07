@@ -5,7 +5,7 @@
 package com.facebook.react;
 
 import com.facebook.react.bridge.*;
-import com.facebook.react.uimanager.AppRegistry;
+import com.facebook.react.modules.appregistry.AppRegistry;
 
 import android.content.Context;
 import android.os.Bundle;
