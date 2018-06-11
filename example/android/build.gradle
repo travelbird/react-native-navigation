@@ -110,7 +110,7 @@ def libraries = [
         'annotations': "com.android.support:support-annotations:${versions.androidSupport}",
     ],
 
-    'reactNative': 'com.facebook.react:react-native:0.52.0',
+    'reactNative': 'com.facebook.react:react-native:0.55.4',
 ]
 
 android {

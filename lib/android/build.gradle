@@ -20,7 +20,7 @@ def libraries = [
         'design'     : "com.android.support:design:${versions.androidSupport}",
     ],
 
-    'reactNative': 'com.facebook.react:react-native:0.52.0',
+    'reactNative': 'com.facebook.react:react-native:0.55.4',
 
     'rodo'       : [
         'core' : "com.travelbird.rodo:rodo-core:${versions.rodo}",
@@ -33,7 +33,7 @@ def libraries = [
 
 android {
   compileSdkVersion versions.androidCompileSdk
-  buildToolsVersion versions.androidBuildTools
+  buildToolsVersion '27.0.3'
 
   defaultConfig {
     minSdkVersion versions.androidMinSdk
