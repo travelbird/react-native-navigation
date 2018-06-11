@@ -37,8 +37,8 @@
   },
   "homepage": "https://github.com/travelbird/react-native-navigation#readme",
   "peerDependencies": {
-    "react": "15.4.2",
-    "react-native": "0.42.3"
+    "react": "16.4.0",
+    "react-native": "0.55.4"
   },
   "dependencies": {
     "prop-types": "^15.5.10",
@@ -58,8 +58,8 @@
     "eslint-plugin-react": "^6.1.2",
     "gitbook-cli": "^2.3.0",
     "murmur2js": "^1.0.0",
-    "react": "15.4.2",
-    "react-native": "0.42.3"
+    "react": "16.4.0",
+    "react-native": "0.55.4"
   },
   "rnpm": {
     "android": {
