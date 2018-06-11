@@ -311,11 +311,6 @@ public class ScreenCoordinator {
   }
 
   private void dismiss(int resultCode, Map<String, Object> payload, boolean finishIfEmpty) {
-    BackStack bsi = backStacks.pop();
-    Promise promise = bsi.getPromise();
-    deliverPromise(promise, resultCode, payload);
-    // This is needed so we can override the pop exit animation to slide down.
-    PresentAnimation anim = bsi.getAnimation();
 
     if (backStacks.isEmpty()) {
       if (finishIfEmpty) {
@@ -323,13 +318,26 @@ public class ScreenCoordinator {
         return;
       }
     } else {
-      // This will be used when the fragment delegates its onCreateAnimation to this.
-      nextPopExitAnim = anim.popExit;
-    }
+      BackStack bsi = backStacks.pop();
+      Promise promise = bsi.getPromise();
+      deliverPromise(promise, resultCode, payload);
+      // This is needed so we can override the pop exit animation to slide down.
+      PresentAnimation anim = bsi.getAnimation();
 
-    activity.getSupportFragmentManager()
-            .popBackStackImmediate(bsi.getTag(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    Log.d(TAG, toString());
+      if (backStacks.isEmpty()) {
+        if (finishIfEmpty) {
+          activity.supportFinishAfterTransition();
+          return;
+        }
+      } else {
+        // This will be used when the fragment delegates its onCreateAnimation to this.
+        nextPopExitAnim = anim.popExit;
+      }
+
+      activity.getSupportFragmentManager()
+              .popBackStackImmediate(bsi.getTag(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      Log.d(TAG, toString());
+    }
   }
 
   public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
